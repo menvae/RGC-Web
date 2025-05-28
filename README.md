@@ -11,7 +11,7 @@ RGC is a web-based tool designed to make converting rhythm game maps more conven
 ## Building
 To build RGC-Web you'll first have to clone this repo
 ```
-git clone [https://github.com/github/training-kit.git](https://github.com/menvae/RGC-Web.git)
+git clone https://github.com/menvae/RGC-Web.git
 ```
 then install the necessary dependencies (you need to have [npm and node.js](https://nodejs.org/en/download) installed)
 ```
