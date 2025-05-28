@@ -1,0 +1,109 @@
+---
+const { id, name } = Astro.props;
+---
+
+<style>
+  .dropdown-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  select {
+    background: color-mix(in srgb, var(--accent-color), 5% black);
+    padding: 0.5rem 1rem;
+    padding-right: 2.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.733);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    width: 100%;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .dropdown-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    filter: invert();
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
+
+  .dropdown-wrapper:focus-within::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  optgroup {
+    opacity: 0.5;
+    padding: 0.5rem 0;
+  }
+
+  optgroup[label] {
+    border-top: 1px solid white;
+  }
+
+  option {
+    padding: 1rem;
+  }
+</style>
+
+<div class="dropdown-wrapper">
+  <select id={id} name={name} onchange="updateUrlParam(this)">
+    <slot />
+  </select>
+</div>
+
+<script is:inline>
+  function updateUrlParam(selectElement) {
+    const url = new URL(window.location.href);
+    const paramName = selectElement.name;
+    const paramValue = selectElement.value;
+
+    const params = new URLSearchParams();
+    
+    url.searchParams.forEach((value, key) => {
+      if (key !== paramName) {
+        params.append(key, value);
+      }
+    });
+    
+    if (paramValue) {
+      params.append(paramName, paramValue);
+    }
+
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectElements = document.querySelectorAll('select[name]');
+
+    selectElements.forEach(selectElement => {
+      const paramName = selectElement.name;
+      if (urlParams.has(paramName)) {
+        const paramValue = urlParams.get(paramName);
+
+        const optionExists = Array.from(selectElement.options).some(option => option.value === paramValue);
+        if (optionExists) {
+          selectElement.value = paramValue;
+        } else if (selectElement.options.length > 0) {
+          selectElement.selectedIndex = 0; 
+        }
+      } else if (selectElement.options.length > 0) {
+        selectElement.selectedIndex = 0; 
+      }
+      selectElement.addEventListener('change', function() {
+        updateUrlParam(this);
+      });
+    });
+  });
+</script>

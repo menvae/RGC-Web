@@ -1,0 +1,202 @@
+---
+const { accept, multiple = false } = Astro.props;
+---
+
+<div class="file-selector-container">
+  <div class="file-selector file-selector-dropzone">
+    <div class="file-selector-content">
+      <svg class="file-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+        <polyline points="13 2 13 9 20 9"></polyline>
+      </svg>
+      
+      <p class="instruction-text">Drag & drop file here</p>
+      <p class="or-text">or</p>
+      <label class="browse-button">
+        Browse Files
+        <input 
+          type="file" 
+          class="file-input"
+          {accept} 
+          {multiple}
+        />
+      </label>
+    </div>
+  </div>
+</div>
+
+<style>
+  .file-selector-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .file-selector-dropzone { 
+    width: 100%;
+    max-width: 80%;
+    height: 200px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background-color: transparent;
+  }
+
+  .file-selector-dropzone:hover {
+    border: 2px dashed rgba(255, 255, 255, 0.623);
+  }
+
+  .file-selector-dropzone.dragover {
+    border-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .file-selector-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .file-icon {
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
+  }
+
+  .instruction-text {
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .or-text {
+    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+  }
+
+  .browse-button {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .browse-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .file-input {
+    display: none;
+  }
+</style>
+
+<script is:inline>
+
+  function getPageNameFromUrl() {
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment.trim() !== '');
+    return pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : 'default';
+  }
+
+  function initializeFileSelector(container) {
+    const dropZone = container.querySelector('.file-selector-dropzone');
+    const fileInput = container.querySelector('.file-input');
+    
+    if (!dropZone || !fileInput) {
+      console.warn('Could not find dropZone or fileInput within:', container);
+      return;
+    }
+
+    function handleFiles(files) {
+      if (files.length > 0) {
+        const pageName = getPageNameFromUrl();
+        const eventName = `${pageName}:filesSelected`;
+        
+        const filesArray = Array.from(files);
+        
+        const event = new CustomEvent(eventName, { 
+          detail: { files: filesArray },
+          bubbles: true,
+          composed: true
+        });
+        
+        container.dispatchEvent(event);
+      }
+    }
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function highlight() {
+      dropZone.classList.add('dragover');
+    }
+
+    function unhighlight() {
+      dropZone.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      unhighlight();
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+      e.target.value = '';
+    });
+
+    dropZone.addEventListener('click', (e) => {
+       if (e.target !== fileInput && !e.target.closest('label.browse-button')) {
+           fileInput.click();
+       }
+    });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    container.dataset.fileSelectorInitialized = 'true';
+  }
+
+  function initializeAllFileSelectors() {
+    const containers = document.querySelectorAll('.file-selector-container:not([data-file-selector-initialized="true"])');
+    containers.forEach(initializeFileSelector);
+  }
+
+  document.addEventListener('DOMContentLoaded', initializeAllFileSelectors);
+  document.addEventListener('astro:page-load', initializeAllFileSelectors); 
+  document.addEventListener('page:changed', initializeAllFileSelectors); 
+  document.addEventListener('tab:changed', initializeAllFileSelectors);
+
+</script>

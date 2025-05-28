@@ -1,0 +1,32 @@
+---
+import App from '../layouts/App.astro';
+import Content from '../components/Content.astro';
+import ItemReveal from '../components/ItemReveal.astro';
+---
+
+<App subtitle="Changelog">
+    <Content>
+    <h1>Changelog</h1>
+    <ul>
+        <ItemReveal title="0.0.1 - Initial release" url='' />
+    </ul>
+    <div style="height: 55vh;"></div>
+    </Content>
+</App>
+
+<style>
+    :root {
+    --navbar-color: #c5a33b;
+	--accent-color: #a08123;
+	--accent-highlight: #977f3621;
+	--navbutton-separator-color: #ffd050;
+	--footer-accent-color: #36342d;
+	--footer-accent-color-lighter: #47453c;
+    --background-color: #2a2822;
+  	}
+
+    hr {
+        background-color: var(--footer-accent-color-lighter);
+        filter: brightness(1.5);
+    }
+</style>

@@ -1,0 +1,168 @@
+---
+const { activeTab = null, tabName = 'tab' } = Astro.props;
+---
+<style>
+  .app-form {
+    max-width: 65rem;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+
+  .app-form:hover {
+    transform: scale(1.01);
+  }
+  
+  .tabs-header {
+    padding: 0.5rem 0 0;
+  }
+  
+  .tabs-buttons {
+    display: flex;
+    gap: 0rem;
+  }
+  
+  .tab-button {
+    font-size:medium;
+    padding: 0.5rem 1.5rem 1.2rem 1.5rem;
+    cursor: pointer;
+    background-color: var(--accent-color);
+    filter: brightness(0.8);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: -0.9rem;
+  }
+  
+  .tab-button.active {
+    background-color: var(--accent-color);
+    filter: brightness(1);
+    position: relative;
+  }
+  
+  .tabs-content-container {
+    background-image: linear-gradient(to bottom right, var(--accent-color), var(--accent-highlight));
+    background-color: var(--accent-color);
+    border-radius: 0px 15px 15px 15px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 0;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+</style>
+
+<div class="app-form" id="app-form" data-tab-name={tabName} data-active-tab={activeTab}>
+  <div class="tabs-header">
+    <div class="tabs-buttons" id="tabs-buttons"></div>
+  </div>
+  
+  <div class="tabs-content-container">
+    <slot />
+  </div>
+  
+  <template id="tab-button-template">
+    <button class="tab-button" data-tab="">Button</button>
+  </template>
+</div>
+
+<script is:inline>
+  function setActiveTab(appForm, tabContents, tabId, updateUrl = true) {
+    const tabName = appForm.getAttribute('data-tab-name') || 'tab';
+    
+    tabContents.forEach(content => {
+      if (content.getAttribute('data-tab-content') === tabId) {
+        content.classList.add('active');
+        content.style.display = 'block';
+      } else {
+        content.classList.remove('active');
+        content.style.display = 'none';
+      }
+    });
+
+    const tabsButtonsContainer = appForm.querySelector('#tabs-buttons');
+    const buttons = tabsButtonsContainer.querySelectorAll('.tab-button');
+    buttons.forEach(button => {
+      if (button.getAttribute('data-tab') === tabId) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+
+    if (updateUrl) {
+      const url = new URL(window.location);
+      url.searchParams.set(tabName, tabId);
+      window.history.replaceState({}, '', url);
+    }
+
+    appForm.dispatchEvent(new CustomEvent('tab:changed', { detail: { tabId } }));
+  }
+
+  function addTabButtons(appForm, tabContents) {
+    const tabName = appForm.getAttribute('data-tab-name') || 'tab';
+    const tabsButtonsContainer = appForm.querySelector('#tabs-buttons');
+    const tabButtonTemplate = appForm.querySelector('#tab-button-template');
+
+    tabsButtonsContainer.innerHTML = '';
+
+    tabContents.forEach((content, index) => {
+      const tabId = content.getAttribute('data-tab-content') || `tab-${index + 1}`;
+      const title = content.getAttribute('data-tab-title') || `Tab ${index + 1}`;
+
+      content.setAttribute('data-tab-content', tabId);
+      content.setAttribute('data-tab-title', title);
+
+      const button = tabButtonTemplate.content.firstElementChild.cloneNode(true);
+      button.textContent = title;
+      button.setAttribute('data-tab', tabId);
+      button.addEventListener('click', () => {
+        setActiveTab(appForm, tabContents, tabId);
+      });
+
+      tabsButtonsContainer.appendChild(button);
+    });
+  }
+
+  function initializeTabs() {
+    const appForm = document.getElementById('app-form');
+    if (!appForm) return;
+
+    const tabName = appForm.getAttribute('data-tab-name') || 'tab';
+    const tabContents = appForm.querySelectorAll('[data-tab-content]');
+
+    tabContents.forEach(content => {
+      content.classList.remove('active');
+      content.style.display = 'none';
+    });
+
+    addTabButtons(appForm, tabContents);
+
+    const params = new URLSearchParams(window.location.search);
+    const initialTab = appForm.hasAttribute('data-active-tab') 
+      ? appForm.getAttribute('data-active-tab')
+      : params.get(tabName) || (tabContents.length > 0 && tabContents[0].getAttribute('data-tab-content'));
+
+    if (initialTab) {
+      setActiveTab(appForm, tabContents, initialTab);
+    }
+
+    window.addEventListener('popstate', () => {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get(tabName);
+      if (tabParam) {
+        setActiveTab(appForm, tabContents, tabParam, false);
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initializeTabs);
+  initializeTabs();
+</script>

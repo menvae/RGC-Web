@@ -1,0 +1,11 @@
+---
+export interface Props {
+  title: string,
+  tabId?: string,
+}
+const { title, tabId = title.toLowerCase().replace(/\s+/g, '-') } = Astro.props;
+---
+<!-- wrapper for tabs -->
+<div data-tab-content={tabId} data-tab-title={title} class="tab-content">
+  <slot />
+</div>

@@ -1,0 +1,113 @@
+---
+import App from '../layouts/App.astro';
+import Content from '../components/Content.astro';
+import AppForm from '../components/Forms/AppForm.astro';
+import AppFormTab from '../components/Forms/AppFormTab.astro';
+import FileSelector from '../components/FileSelector.astro';
+import Dropdown from '../components/Dropdown.astro';
+import ConvertResult from '../components/ConvertResult.astro';
+---
+
+<App subtitle="Map Conversion">
+    <Content>
+
+        <section>
+            <h1>Map Conversion</h1>
+            <p>Convert your maps or charts here.</p>
+            <p>You can find supported formats below.</a></p>
+        </section>
+
+        <hr />
+        
+        <AppForm activeTab="mania" tabName="mode">
+            <AppFormTab title="Mania">
+              <FileSelector
+              accept=".osu, .sm, .zip, .rar, .tar, .7z, .osz" 
+              multiple
+              />
+              <fieldset>
+                <legend>Conversion Options</legend>
+                <div style="display: flex; justify-content: flex-end;">
+                  <div style="display: flex; align-items: center; gap: 10px; white-space: nowrap;">
+                      <p style="margin: 0; white-space: nowrap;">Convert to</p>
+                      <Dropdown id="ChartType" name="type">
+                        <optgroup label="Osu">
+                          <option value="osu">.osu</option>
+                        </optgroup>
+                        <optgroup label="Etterna">
+                          <option value="sm">.sm</option>
+                        </optgroup>
+                        <optgroup label="Stepmania">
+                          <option value="sm">.sm</option>
+                        </optgroup>
+                      </Dropdown>
+                  </div>
+                </div>
+              </fieldset>
+              <div style="justify-content: center; align-items: center; display: flex; flex-direction: column; margin-top: 2rem;">
+                <button disabled type="submit" id="map-convert-btn" class="convert-button">Convert</button>
+              </div>
+            </AppFormTab>
+
+          </AppForm>
+
+          <br />
+
+        <ConvertResult>
+      </ConvertResult>
+
+      <hr />
+        <section>
+          <h2>Supported Formats</h2>
+          <ul>
+            <li>.osu</li>
+            <li>.sm</li>
+            <li>Most archives also work.</li>
+        </section>
+
+    </Content>
+</App>
+
+<style>
+	:root {
+    --navbar-color: #1a7a8c;  
+    --accent-color: #3b1b33; 
+    --accent-highlight: #2e707c1e;  
+    --navbutton-separator-color: #3dc5e0; 
+    --footer-accent-color: #222b2b;  
+    --footer-accent-color-lighter: #313d3d; 
+    --background-color: #1f2727; 
+}
+
+.convert-button {
+  color: white;
+  width: 8.5rem;
+  height: 3.2rem;
+  border: 3px solid rgba(255, 255, 255, 0.651);
+  border-radius: 15px;
+  transition: all 0.1s ease-out;
+  cursor: pointer;
+  background: var(--accent-color);
+  font-size: 1.4em;
+  font-weight: 550;
+}
+
+.convert-button:not([disabled]):hover {
+  background: rgba(255, 255, 255, 0.116);
+  color: white;
+  font-size: 1.5em;
+}
+
+.convert-button:not([disabled]):active {
+  background: white;
+  border-color: var(--background-color);
+  border-width: 4px;
+  color: var(--accent-color);
+  font-size: 1.3em;
+}
+
+.convert-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>

@@ -1,0 +1,496 @@
+---
+---
+<style is:global>
+  .result-container {
+    display: flex;
+    height: 60vh;
+    width: 100%;
+    background-image: linear-gradient(to bottom right, var(--accent-color), var(--accent-highlight));
+    background-color: var(--accent-color);
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+    position: relative;
+  }
+
+  .result-container:hover {
+    transform: scale(1.01);
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .side-menu {
+    margin: 1rem;
+    border-radius: 20px;
+    width: 40%;
+    background-color: color-mix(in srgb, var(--accent-color) 30%, rgba(0, 0, 0, 0.185));
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .file-item, .folder-item {
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .folder-item:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 75%, white);
+  }
+
+  .file-item:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 85%, white);
+  }
+
+  .file-item {
+    background-color: color-mix(in srgb, var(--accent-color) 95%, white);
+    cursor: default;
+  }
+
+    span::before {
+    content: attr(data-icon);
+    user-select: none;
+    filter: brightness(1.2) contrast(0.7) saturate(0.9);
+    display: inline-block;
+}
+
+  .folder-item {
+    background-color: color-mix(in srgb, var(--accent-color) 90%, white);
+    cursor: pointer;
+  }
+
+  .folder-contents {
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent-color) 70%, white);
+    display: none;
+  }
+
+  .folder-contents.expanded {
+    display: block;
+  }
+  
+  .empty-folder-message {
+    padding: 0.5rem;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: rgba(255,255,255,0.8);
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-help {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
+  .file-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .save-as-btn{
+    margin-left: 1rem;
+    border: 0;
+    background: linear-gradient(135deg, #ff69b4, #ff1493); /* pretty lol */
+    color: white;
+    width: 100px;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+  }
+
+    .toggle-btn {
+        border: 0;
+        color: white;
+        background: transparent;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .save-as-btn:hover {
+        background: linear-gradient(135deg, #ff1493, #ff007f);
+    }
+
+  .empty-info-state {
+    opacity: 0.3;
+    text-align: left;
+    line-height: 1rem;
+    /* pointer-events: none; */
+    user-select: none;
+    /* padding: 25%; */
+  }
+
+  .prefixed::before {
+    content: attr(data-text);
+    user-select: none;
+}
+
+  .dropdown-item:hover {
+        color: black;
+      }
+
+  .file-actions {
+    position: relative;
+  }
+
+  .export-button {
+    z-index: 10;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+
+  .export-button:not([disabled]):hover {
+    background: linear-gradient(135deg, #ff1493, #ff007f);
+  }
+
+  .export-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding: 1px 0;
+  margin: 0;
+  width: 180px;
+  border: 1px solid #ddd;
+  opacity: 0;
+  transform: translate(-50%,-10px);
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  cursor: default;
+}
+
+.dropdown.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) translateX(-50%);
+}
+
+.dropdown li {
+    padding: 10px 14px;
+    cursor: default;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+    color: white;
+  }
+
+  .dropdown.visible li {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+    color: white;
+  }
+
+  .dropdown li:hover {
+    background: white;
+    color: var(--accent-color);
+  }
+
+  .export-section {
+  position: absolute;
+  bottom: 3rem; 
+  left: 25%; 
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+}
+</style>
+
+<div class="result-container" id="ConvertResult">
+  <main class="main-content">
+    <div id="convert-info">
+      <h3 class="empty-info-state prefixed" id="extraction-time" data-text="Time taken to extract: "></h3>
+      <h3 class="empty-info-state prefixed" id="parse-time" data-text="Time taken to parse: "></h3> 
+      <h3 class="empty-info-state prefixed" id="convert-time" data-text="Time taken to convert: "></h3>
+    </div>
+    <slot />
+  </main>
+
+  <aside class="side-menu" id="file-browser">
+    <div id="file-tree"></div>
+  </aside>
+
+  <div class="export-section">
+    <button disabled="true" id="export-button" class="export-button">Export as ▾</button>
+    <ul id="export-dropdown" class="dropdown">
+      <li data-option="map">Export as Map</li>
+      <li data-option="zip">Export as Zip</li>
+    </ul>
+  </div>
+</div>
+
+<script is:inline>
+    const container = document.getElementById('ConvertResult');
+    const fileTree = document.getElementById('file-tree');
+
+  function getFileIcon(filename) {
+    const extension = filename.split('.').pop().toLowerCase();
+    
+    switch (extension) {
+      case 'zip':
+      case 'rar':
+      case '7z':
+      case 'tar':
+      case 'gz':
+      case 'bz2':
+      case 'xz':
+      case 'tar.gz':
+      case 'tar.bz2':
+      case 'osz':
+        return '📚 ';
+      
+      case 'mp4':
+      case 'avi':
+      case 'mkv':
+      case 'mov':
+      case 'wmv':
+      case 'flv':
+      case 'webm':
+      case 'm4v':
+      case '3gp':
+      case 'mpg':
+      case 'mpeg':
+        return '🎬 ';
+      
+      case 'mp3':
+      case 'wav':
+      case 'flac':
+      case 'aac':
+      case 'ogg':
+      case 'wma':
+      case 'm4a':
+      case 'opus':
+      case 'aiff':
+        return '💿 ';
+      
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'bmp':
+      case 'svg':
+      case 'webp':
+      case 'tiff':
+      case 'ico':
+      case 'psd':
+        return '🖼️ ';
+      
+      case 'osu':
+      case 'sm':
+        return '🗺️ ';
+      
+      default:
+        return '📄 ';
+  }
+}
+
+function formatTime(durationMillis) {
+    const units = [
+        { name: 'millisecond', limit: 1000},
+        { name: 'second', limit: 60, inPrevious: 1000 },
+        { name: 'minute', limit: 60, inPrevious: 60 },
+    ];
+    
+    let unit = units[0];
+    let value = durationMillis;
+  
+    for (let i = 1; i < units.length; i++) {
+        if (value < units[i].limit * units[i].inPrevious) break;
+        unit = units[i];
+        value = value / units[i].inPrevious;
+    }
+
+    const roundedValue = value % 1 === 0 ? value : parseFloat(value.toFixed(2));
+    
+    const unitName = roundedValue === 1 ? unit.name : unit.name + 's';
+    
+    return `${roundedValue} ${unitName}`;
+}
+
+    container.renderFileTree = (files) => {
+      fileTree.innerHTML = '';
+
+      if (!Array.isArray(files) || files.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'empty-browser-message';
+        emptyMessage.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📂</div>
+            <p>No files available</p>
+            <p class="empty-help">Converted files will appear here..</p>
+          </div>
+        `;
+        fileTree.appendChild(emptyMessage);
+        return;
+      }
+
+      files.forEach(item => {
+        renderFileTreeInternal(item, fileTree);
+      });
+    };
+
+    function renderFileTreeInternal(node, parentElement) {
+      const element = document.createElement('div');
+
+      if (node.type === 'folder') {
+        element.innerHTML = `
+          <div class="folder-item" data-folder="${node.name}" data-path="${node.path || ''}">
+            <span data-icon="📦 ">${node.name}</span>
+            <div class="file-actions">
+              <button class="save-as-btn" title="Save Folder As">💾 Save as</button>
+              <button class="toggle-btn" title="Toggle Folder">►</button>
+            </div>
+          </div>
+          <div class="folder-contents" id="folder-${node.path ? node.path.replace(/\//g, '-') : node.name}" style="display: none;"></div>
+        `;
+
+        const folderContents = element.querySelector('.folder-contents');
+        if (node.children && node.children.length > 0) {
+          node.children.forEach(child => {
+            renderFileTreeInternal(child, folderContents);
+          });
+        } else {
+          const emptyMessage = document.createElement('div');
+          emptyMessage.className = 'empty-folder-message';
+          emptyMessage.textContent = 'This folder is empty';
+          folderContents.appendChild(emptyMessage);
+        }
+
+        const toggleBtn = element.querySelector('.toggle-btn');
+        const saveAsBtn = element.querySelector('.save-as-btn');
+        const folderItem = element.querySelector('.folder-item');
+
+        folderItem.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('save-as-btn')) {
+            folderContents.style.display = folderContents.style.display === 'none' ? 'block' : 'none';
+            toggleBtn.textContent = folderContents.style.display === 'none' ? '►' : '▼';
+          }
+        });
+
+        saveAsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (container.onSaveAs) {
+            container.onSaveAs(node);
+          }
+        });
+      } else {
+        const fileIcon = getFileIcon(node.name);
+        element.innerHTML = `
+          <div class="file-item" data-path="${node.path || ''}">
+            <span data-icon="${fileIcon}">${node.name}</span>
+            <div class="file-actions">
+              <button class="save-as-btn" title="Save As">💾 Save</button>
+            </div>
+          </div>
+        `;
+
+        const saveAsBtn = element.querySelector('.save-as-btn');
+        saveAsBtn.addEventListener('click', () => {
+          if (container.onSaveAs) {
+            container.onSaveAs(node);
+          }
+        });
+      }
+
+      parentElement.appendChild(element);
+    }
+
+    const exportButton = document.getElementById("export-button");
+    const dropdown = document.getElementById("export-dropdown");
+    let exportDisabled = exportButton.getAttribute('disabled');
+
+    
+    let buttonHovered = false;
+
+  const showDropdown = () => {
+    if (buttonHovered && !exportDisabled) {
+      dropdown.classList.add("visible");
+    }
+  };
+
+  const hideDropdown = () => {
+    setTimeout(() => {
+      if (!buttonHovered) {
+        dropdown.classList.remove("visible");
+      }
+    }, 100);
+  };
+
+  exportButton.addEventListener("mouseenter", () => {
+    buttonHovered = true;
+    showDropdown();
+  });
+
+  dropdown.addEventListener("mouseenter", showDropdown);
+
+  exportButton.addEventListener("mouseleave", () => {
+    setTimeout(() => {
+      if (!dropdown.matches(":hover")) {
+        buttonHovered = false;
+        dropdown.classList.remove("visible");
+      }
+    }, 100);
+  });
+
+  dropdown.addEventListener("mouseleave", () => {
+    setTimeout(() => {
+      if (!exportButton.matches(":hover")) {
+        buttonHovered = false;
+        dropdown.classList.remove("visible");
+      }
+    }, 100);
+  });
+
+    dropdown.addEventListener("click", (event) => {
+      const selectedOption = event.target.dataset.option;
+      if (selectedOption) {
+        container.dispatchEvent(new CustomEvent("map:exportSelected", { detail: selectedOption }));
+      }
+    });
+
+    container.renderFileTree([]);
+
+    document.addEventListener("convert:done", () => {
+        exportButton.removeAttribute("disabled")
+        exportDisabled = false;
+    })
+</script>

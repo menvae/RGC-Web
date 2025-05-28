@@ -1,0 +1,128 @@
+---
+---
+
+<footer class="footer">
+    <div class="footer-center">
+      <div class="footer-content">
+
+        <div class="footer-section">
+          <h3 class="section-title">Github</h3>
+          <div class="title-separator"></div>
+          <ul class="section-links">
+            <li><a target="_blank" href="" class="footer-link">Web Client</a></li>
+            <li><a target="_blank" href="" class="footer-link">Chart Conversion</a></li>
+          </ul>
+        </div>
+        
+        <div class="separator"></div>
+        
+        <!-- <div class="footer-section">
+          <h3 class="section-title">Rhythm Game Converter</h3>
+          <div class="title-separator"></div>
+          <ul class="section-links">
+            <li><a target="_blank" href="" class="footer-link">Documentation</a></li>
+          </ul>
+        </div>
+        
+        <div class="separator"></div> -->
+        
+        <div class="footer-section">
+          <h3 class="section-title">Help</h3>
+          <div class="title-separator"></div>
+          <ul class="section-links">
+            <li><a href="/" class="footer-link">About</a></li>
+            <li><a href="/" class="footer-link">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <style>
+    :root {
+      --footer-section-color: #f7fafc;
+      --footer-link-text: #cbd5e0;
+      --separator-color: var(--footer-accent-color-lighter);
+    }
+  
+    .footer {
+      background-color: var(--footer-accent-color);
+      color: var(--footer-section-color);
+      padding: 1.5rem 1rem;
+      margin-top: auto;
+      width: 100%;
+      font-size: 0.875rem;
+    }
+  
+    .footer-center {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+  
+    .footer-section {
+      min-width: 140px;
+      text-align: center;
+    }
+  
+    .separator {
+      width: 1px;
+      background-color: var(--separator-color);
+    }
+  
+    .title-separator {
+      border-bottom: 3px dotted var(--separator-color);
+      margin: 0.5rem auto;
+      width: 80%;
+    }
+  
+    .section-title {
+      color: var(--footer-section-color);
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      font-weight: 600;
+    }
+  
+    .section-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  
+    .footer-link {
+      color: var(--footer-link-text);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-block;
+      padding: 0.15rem 0;
+      font-size: 0.85rem;
+    }
+  
+    .footer-link:hover {
+      color: var(--footer-section-color);
+      text-decoration: underline;
+    }
+  
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .separator {
+        height: 1px;
+        width: 50%;
+        margin: 0.5rem 0;
+      }
+    }
+  </style>

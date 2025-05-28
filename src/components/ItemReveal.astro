@@ -1,0 +1,162 @@
+---
+export interface Props {
+  title: string;
+  expanded?: boolean;
+  url?: string;
+}
+
+const { title, expanded = false, url } = Astro.props;
+---
+
+<div class="reveal-container" data-expanded={expanded} data-url={url}>
+  <button class="reveal-header" aria-expanded={expanded}>
+    <span class="arrow">►</span>
+    <span class="title">{title}</span>
+  </button>
+  
+  <div class="reveal-content">
+    {!url && <slot />}
+    {url && <div class="content-placeholder"></div>}
+  </div>
+</div>
+
+<style is:inline>
+  .reveal-container {
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 1rem 0;
+    background-color: rgba(0, 0, 0, 0.103);
+    max-width: 50%;
+  }
+  
+  .reveal-header {
+    font-size: large;
+    color: white;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .arrow {
+    margin-right: 0.75rem;
+    transition: transform 0.1s ease-out;
+    font-size: 0.8em;
+  }
+  
+  .reveal-container[data-expanded="true"] .arrow {
+    transform: rotate(90deg);
+  }
+  
+  .title {
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  
+  .reveal-header:hover .title {
+    color: var(--navbar-color);
+  }
+  
+  .reveal-content {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: 
+      max-height 0.1s cubic-bezier(0, 0, 0, 1),
+      padding 0.1s cubic-bezier(0, 0, 0, 1);
+  }
+  
+  .reveal-container[data-expanded="true"] .reveal-content {
+    max-height: var(--max-height);
+    padding-bottom: 1rem;
+  }
+  
+  .content-placeholder {
+    min-height: 20px;
+  }
+</style>
+
+<script is:inline>
+  function cleanContent(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    doc.querySelectorAll('script, style, iframe, frame, object, embed, link').forEach(el => el.remove());
+    doc.querySelectorAll('*').forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on')) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    return doc.body.innerHTML;
+  }
+
+  document.querySelectorAll('.reveal-container').forEach(container => {
+    const button = container.querySelector('.reveal-header');
+    const content = container.querySelector('.reveal-content');
+    const url = container.getAttribute('data-url');
+    
+    let isExpanded = container.getAttribute('data-expanded') === 'true';
+    
+    if (isExpanded && url) {
+      fetchContent();
+    } else if (isExpanded) {
+      updateContentHeight();
+    }
+    
+    button.addEventListener('click', () => {
+      isExpanded = !isExpanded;
+      
+      container.setAttribute('data-expanded', isExpanded);
+      button.setAttribute('aria-expanded', isExpanded);
+      
+      if (isExpanded) {
+        if (url) {
+          fetchContent();
+        } else {
+          updateContentHeight();
+        }
+      } else {
+        content.style.maxHeight = '0';
+      }
+    });
+    
+    window.addEventListener('resize', () => {
+      if (isExpanded) {
+        updateContentHeight();
+      }
+    });
+    
+    async function fetchContent() {
+      const placeholder = content.querySelector('.content-placeholder');
+      if (!placeholder) return;
+      
+      try {
+        placeholder.textContent = 'Loading...';
+        content.style.maxHeight = '100px';
+        
+        const response = await fetch(url);
+        if (response.ok) {
+          const text = await response.text();
+          const clean = cleanContent(text);
+          placeholder.innerHTML = clean;
+        } else {
+          placeholder.textContent = `Error: ${response.status}`;
+        }
+      } catch (error) {
+        placeholder.textContent = 'Failed to load content';
+      } finally {
+        updateContentHeight();
+      }
+    }
+    
+    function updateContentHeight() {
+      content.style.setProperty('--max-height', `${content.scrollHeight}px`);
+      content.style.maxHeight = 'var(--max-height)';
+    }
+  });
+</script>
