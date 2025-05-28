@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import basicSsl from "@vitejs/plugin-basic-ssl";
-import fs from 'fs-extra';
+// import fs from 'fs-extra';
+
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   vite: {
@@ -17,4 +19,6 @@ export default defineConfig({
       https: true,
     },
   },
+  site: 'https://rgconverter.netlify.app',
+  integrations: [sitemap()],
 });
