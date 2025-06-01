@@ -1,8 +1,7 @@
 import { defineConfig } from 'astro/config';
 import basicSsl from "@vitejs/plugin-basic-ssl";
-// import fs from 'fs-extra';
-
 import sitemap from '@astrojs/sitemap';
+// import fs from 'fs-extra';
 
 export default defineConfig({
   vite: {
