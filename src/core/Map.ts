@@ -219,10 +219,10 @@ async function parseChart(path: string, mapName: string) {
 
     switch (extension) {
         case 'sm':
-            parser = rgcChart?.parse_sm;
+            parser = rgcChart?.parse_from_sm;
             break;
         case 'osu':
-            parser = rgcChart?.parse_osu;
+            parser = rgcChart?.parse_from_osu;
             break;
         default:
             return;
@@ -248,10 +248,10 @@ async function convertChart(chart: Chart, convertType: string): Promise<string |
 
     switch (convertType) {
         case 'sm':
-            converter = rgcChart?.convert_to_sm;
+            converter = rgcChart?.write_to_sm;
             break;
         case 'osu':
-            converter = rgcChart?.convert_to_osu;
+            converter = rgcChart?.write_to_osu;
             break;
         default:
             convertError(`Converter for "${convertType}" not available`);

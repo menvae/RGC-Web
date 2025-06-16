@@ -1,9 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-export function parse_osu(raw_chart: string): Chart;
-export function parse_sm(raw_chart: string): Chart;
-export function convert_to_osu(chart: Chart): string;
-export function convert_to_sm(chart: Chart): string;
+export function write_to_osu(chart: Chart): string;
+export function write_to_sm(chart: Chart): string;
+export function write_to_qua(chart: Chart): string;
+export function parse_from_osu(raw_chart: string): Chart;
+export function parse_from_sm(raw_chart: string): Chart;
+export function parse_from_qua(raw_chart: string): Chart;
 export enum KeyType {
   Empty = 0,
   Normal = 1,
@@ -29,7 +31,7 @@ export class Chart {
 export class ChartInfo {
   private constructor();
   free(): void;
-  static new(difficulty_name: string, bg_path: string, song_path: string, audio_offset: number, preview_time: number, key_count: number, row_count: number, object_count: number): ChartInfo;
+  static new(difficulty_name: string, bg_path: string, song_path: string, audio_offset: number, preview_time: number, key_count: number): ChartInfo;
   static empty(): ChartInfo;
   difficulty_name: string;
   bg_path: string;
@@ -37,8 +39,6 @@ export class ChartInfo {
   audio_offset: number;
   preview_time: number;
   key_count: number;
-  row_count: number;
-  object_count: number;
 }
 export class HitObjects {
   private constructor();
@@ -65,17 +65,6 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbg_metadata_free: (a: number, b: number) => void;
-  readonly __wbg_get_metadata_alt_artist: (a: number) => [number, number];
-  readonly __wbg_set_metadata_alt_artist: (a: number, b: number, c: number) => void;
-  readonly __wbg_get_metadata_creator: (a: number) => [number, number];
-  readonly __wbg_set_metadata_creator: (a: number, b: number, c: number) => void;
-  readonly __wbg_get_metadata_genre: (a: number) => [number, number];
-  readonly __wbg_set_metadata_genre: (a: number, b: number, c: number) => void;
-  readonly __wbg_get_metadata_tags: (a: number) => [number, number];
-  readonly __wbg_set_metadata_tags: (a: number, b: number, c: number) => void;
-  readonly __wbg_get_metadata_source: (a: number) => [number, number];
-  readonly __wbg_set_metadata_source: (a: number, b: number, c: number) => void;
   readonly __wbg_chartinfo_free: (a: number, b: number) => void;
   readonly __wbg_get_chartinfo_difficulty_name: (a: number) => [number, number];
   readonly __wbg_set_chartinfo_difficulty_name: (a: number, b: number, c: number) => void;
@@ -89,14 +78,26 @@ export interface InitOutput {
   readonly __wbg_set_chartinfo_preview_time: (a: number, b: number) => void;
   readonly __wbg_get_chartinfo_key_count: (a: number) => number;
   readonly __wbg_set_chartinfo_key_count: (a: number, b: number) => void;
-  readonly __wbg_get_chartinfo_row_count: (a: number) => number;
-  readonly __wbg_set_chartinfo_row_count: (a: number, b: number) => void;
-  readonly __wbg_get_chartinfo_object_count: (a: number) => number;
-  readonly __wbg_set_chartinfo_object_count: (a: number, b: number) => void;
-  readonly chartinfo_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
+  readonly chartinfo_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => number;
   readonly chartinfo_empty: () => number;
-  readonly __wbg_timingpoints_free: (a: number, b: number) => void;
+  readonly __wbg_metadata_free: (a: number, b: number) => void;
+  readonly __wbg_get_metadata_alt_artist: (a: number) => [number, number];
+  readonly __wbg_set_metadata_alt_artist: (a: number, b: number, c: number) => void;
+  readonly __wbg_get_metadata_creator: (a: number) => [number, number];
+  readonly __wbg_set_metadata_creator: (a: number, b: number, c: number) => void;
+  readonly __wbg_get_metadata_genre: (a: number) => [number, number];
+  readonly __wbg_set_metadata_genre: (a: number, b: number, c: number) => void;
+  readonly __wbg_get_metadata_tags: (a: number) => [number, number];
+  readonly __wbg_set_metadata_tags: (a: number, b: number, c: number) => void;
+  readonly __wbg_get_metadata_source: (a: number) => [number, number];
+  readonly __wbg_set_metadata_source: (a: number, b: number, c: number) => void;
   readonly __wbg_hitobjects_free: (a: number, b: number) => void;
+  readonly __wbg_get_metadata_title: (a: number) => [number, number];
+  readonly __wbg_get_metadata_alt_title: (a: number) => [number, number];
+  readonly __wbg_get_metadata_artist: (a: number) => [number, number];
+  readonly __wbg_set_metadata_title: (a: number, b: number, c: number) => void;
+  readonly __wbg_set_metadata_alt_title: (a: number, b: number, c: number) => void;
+  readonly __wbg_set_metadata_artist: (a: number, b: number, c: number) => void;
   readonly __wbg_chart_free: (a: number, b: number) => void;
   readonly __wbg_get_chart_metadata: (a: number) => number;
   readonly __wbg_set_chart_metadata: (a: number, b: number) => void;
@@ -106,16 +107,13 @@ export interface InitOutput {
   readonly __wbg_set_chart_timing_points: (a: number, b: number) => void;
   readonly __wbg_get_chart_hitobjects: (a: number) => number;
   readonly __wbg_set_chart_hitobjects: (a: number, b: number) => void;
-  readonly __wbg_get_metadata_title: (a: number) => [number, number];
-  readonly __wbg_get_metadata_alt_title: (a: number) => [number, number];
-  readonly __wbg_get_metadata_artist: (a: number) => [number, number];
-  readonly __wbg_set_metadata_title: (a: number, b: number, c: number) => void;
-  readonly __wbg_set_metadata_alt_title: (a: number, b: number, c: number) => void;
-  readonly __wbg_set_metadata_artist: (a: number, b: number, c: number) => void;
-  readonly parse_osu: (a: number, b: number) => [number, number, number];
-  readonly parse_sm: (a: number, b: number) => [number, number, number];
-  readonly convert_to_osu: (a: number) => [number, number, number, number];
-  readonly convert_to_sm: (a: number) => [number, number, number, number];
+  readonly __wbg_timingpoints_free: (a: number, b: number) => void;
+  readonly write_to_osu: (a: number) => [number, number, number, number];
+  readonly write_to_sm: (a: number) => [number, number, number, number];
+  readonly write_to_qua: (a: number) => [number, number, number, number];
+  readonly parse_from_osu: (a: number, b: number) => [number, number, number];
+  readonly parse_from_sm: (a: number, b: number) => [number, number, number];
+  readonly parse_from_qua: (a: number, b: number) => [number, number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

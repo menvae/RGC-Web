@@ -126,43 +126,15 @@ function takeFromExternrefTable0(idx) {
     return value;
 }
 /**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_osu(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_osu(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_sm(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_sm(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
  * @param {Chart} chart
  * @returns {string}
  */
-export function convert_to_osu(chart) {
+export function write_to_osu(chart) {
     let deferred2_0;
     let deferred2_1;
     try {
         _assertClass(chart, Chart);
-        const ret = wasm.convert_to_osu(chart.__wbg_ptr);
+        const ret = wasm.write_to_osu(chart.__wbg_ptr);
         var ptr1 = ret[0];
         var len1 = ret[1];
         if (ret[3]) {
@@ -181,12 +153,12 @@ export function convert_to_osu(chart) {
  * @param {Chart} chart
  * @returns {string}
  */
-export function convert_to_sm(chart) {
+export function write_to_sm(chart) {
     let deferred2_0;
     let deferred2_1;
     try {
         _assertClass(chart, Chart);
-        const ret = wasm.convert_to_sm(chart.__wbg_ptr);
+        const ret = wasm.write_to_sm(chart.__wbg_ptr);
         var ptr1 = ret[0];
         var len1 = ret[1];
         if (ret[3]) {
@@ -199,6 +171,72 @@ export function convert_to_sm(chart) {
     } finally {
         wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
+}
+
+/**
+ * @param {Chart} chart
+ * @returns {string}
+ */
+export function write_to_qua(chart) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        _assertClass(chart, Chart);
+        const ret = wasm.write_to_qua(chart.__wbg_ptr);
+        var ptr1 = ret[0];
+        var len1 = ret[1];
+        if (ret[3]) {
+            ptr1 = 0; len1 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred2_0 = ptr1;
+        deferred2_1 = len1;
+        return getStringFromWasm0(ptr1, len1);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_osu(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_osu(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_sm(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_sm(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_qua(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_qua(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
 }
 
 /**
@@ -443,50 +481,22 @@ export class ChartInfo {
         wasm.__wbg_set_chartinfo_key_count(this.__wbg_ptr, arg0);
     }
     /**
-     * @returns {number}
-     */
-    get row_count() {
-        const ret = wasm.__wbg_get_chartinfo_row_count(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @param {number} arg0
-     */
-    set row_count(arg0) {
-        wasm.__wbg_set_chartinfo_row_count(this.__wbg_ptr, arg0);
-    }
-    /**
-     * @returns {number}
-     */
-    get object_count() {
-        const ret = wasm.__wbg_get_chartinfo_object_count(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @param {number} arg0
-     */
-    set object_count(arg0) {
-        wasm.__wbg_set_chartinfo_object_count(this.__wbg_ptr, arg0);
-    }
-    /**
      * @param {string} difficulty_name
      * @param {string} bg_path
      * @param {string} song_path
      * @param {number} audio_offset
      * @param {number} preview_time
      * @param {number} key_count
-     * @param {number} row_count
-     * @param {number} object_count
      * @returns {ChartInfo}
      */
-    static new(difficulty_name, bg_path, song_path, audio_offset, preview_time, key_count, row_count, object_count) {
+    static new(difficulty_name, bg_path, song_path, audio_offset, preview_time, key_count) {
         const ptr0 = passStringToWasm0(difficulty_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(bg_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
         const ptr2 = passStringToWasm0(song_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len2 = WASM_VECTOR_LEN;
-        const ret = wasm.chartinfo_new(ptr0, len0, ptr1, len1, ptr2, len2, audio_offset, preview_time, key_count, row_count, object_count);
+        const ret = wasm.chartinfo_new(ptr0, len0, ptr1, len1, ptr2, len2, audio_offset, preview_time, key_count);
         return ChartInfo.__wrap(ret);
     }
     /**

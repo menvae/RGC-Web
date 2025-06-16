@@ -1,11 +1,11 @@
 {
-  "name": "rgc-chart",
+  "name": "rgc-chart-browser",
   "type": "module",
   "collaborators": [
     "menvae"
   ],
-  "description": "A Rust library for converting maps and charts between various rhythm games, with support for JavaScript and TypeScript via WebAssembly (WASM) for the Web and Node.js.",
-  "version": "0.0.1",
+  "description": "A library for parsing and writing rhythm game charts.",
+  "version": "0.0.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,5 +20,15 @@
   "types": "rgc_chart.d.ts",
   "sideEffects": [
     "./snippets/*"
+  ],
+  "keywords": [
+    "wasm",
+    "rust",
+    "rhythm-game",
+    "osu",
+    "stepmania",
+    "parser",
+    "converter",
+    "writer"
   ]
 }
