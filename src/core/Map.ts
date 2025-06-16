@@ -166,6 +166,8 @@ export function showDropdownMenu(
 
 function getMapFormat(format: string) {
     switch(format) {
+        case "qua":
+            return "qp";
         case "osu":
             return "osz";
         default:
@@ -224,6 +226,9 @@ async function parseChart(path: string, mapName: string) {
         case 'osu':
             parser = rgcChart?.parse_from_osu;
             break;
+        case 'qua':
+            parser = rgcChart?.parse_from_qua;
+            break;
         default:
             return;
     }
@@ -252,6 +257,9 @@ async function convertChart(chart: Chart, convertType: string): Promise<string |
             break;
         case 'osu':
             converter = rgcChart?.write_to_osu;
+            break;
+        case 'qua':
+            converter = rgcChart?.write_to_qua;
             break;
         default:
             convertError(`Converter for "${convertType}" not available`);
@@ -313,6 +321,7 @@ async function parseCharts(event: any) {
                 await fileManager.fs.promises.mkdir("/MapImport/", { recursive: true });
                 await fileManager.extractTo(file, "/MapImport/");
                 break;
+            case 'qp':
             case 'osz':
                 const fullPath = `/MapImport/${fileManager.removeFileExtension(file.name)}`;
                 await fileManager.fs.promises.mkdir(fullPath, { recursive: true });
