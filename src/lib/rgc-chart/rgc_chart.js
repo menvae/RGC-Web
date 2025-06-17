@@ -114,16 +114,57 @@ function passArrayJsValueToWasm0(array, malloc) {
     return ptr;
 }
 
-function _assertClass(instance, klass) {
-    if (!(instance instanceof klass)) {
-        throw new Error(`expected instance of ${klass.name}`);
-    }
-}
-
 function takeFromExternrefTable0(idx) {
     const value = wasm.__wbindgen_export_0.get(idx);
     wasm.__externref_table_dealloc(idx);
     return value;
+}
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_osu(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_osu(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_sm(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_sm(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_qua(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_qua(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+function _assertClass(instance, klass) {
+    if (!(instance instanceof klass)) {
+        throw new Error(`expected instance of ${klass.name}`);
+    }
 }
 /**
  * @param {Chart} chart
@@ -195,48 +236,6 @@ export function write_to_qua(chart) {
     } finally {
         wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_osu(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_osu(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_sm(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_sm(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_qua(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_qua(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
 }
 
 /**

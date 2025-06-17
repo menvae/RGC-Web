@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-export function write_to_osu(chart: Chart): string;
-export function write_to_sm(chart: Chart): string;
-export function write_to_qua(chart: Chart): string;
 export function parse_from_osu(raw_chart: string): Chart;
 export function parse_from_sm(raw_chart: string): Chart;
 export function parse_from_qua(raw_chart: string): Chart;
+export function write_to_osu(chart: Chart): string;
+export function write_to_sm(chart: Chart): string;
+export function write_to_qua(chart: Chart): string;
 export enum KeyType {
   Empty = 0,
   Normal = 1,
@@ -92,6 +92,9 @@ export interface InitOutput {
   readonly __wbg_get_metadata_source: (a: number) => [number, number];
   readonly __wbg_set_metadata_source: (a: number, b: number, c: number) => void;
   readonly __wbg_hitobjects_free: (a: number, b: number) => void;
+  readonly parse_from_osu: (a: number, b: number) => [number, number, number];
+  readonly parse_from_sm: (a: number, b: number) => [number, number, number];
+  readonly parse_from_qua: (a: number, b: number) => [number, number, number];
   readonly __wbg_get_metadata_title: (a: number) => [number, number];
   readonly __wbg_get_metadata_alt_title: (a: number) => [number, number];
   readonly __wbg_get_metadata_artist: (a: number) => [number, number];
@@ -111,9 +114,6 @@ export interface InitOutput {
   readonly write_to_osu: (a: number) => [number, number, number, number];
   readonly write_to_sm: (a: number) => [number, number, number, number];
   readonly write_to_qua: (a: number) => [number, number, number, number];
-  readonly parse_from_osu: (a: number, b: number) => [number, number, number];
-  readonly parse_from_sm: (a: number, b: number) => [number, number, number];
-  readonly parse_from_qua: (a: number, b: number) => [number, number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
