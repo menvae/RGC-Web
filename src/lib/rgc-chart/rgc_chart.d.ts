@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-export function parse_from_osu(raw_chart: string): Chart;
-export function parse_from_sm(raw_chart: string): Chart;
-export function parse_from_qua(raw_chart: string): Chart;
 export function write_to_osu(chart: Chart): string;
 export function write_to_sm(chart: Chart): string;
 export function write_to_qua(chart: Chart): string;
+export function parse_from_osu(raw_chart: string): Chart;
+export function parse_from_sm(raw_chart: string): Chart;
+export function parse_from_qua(raw_chart: string): Chart;
 export enum KeyType {
   Empty = 0,
   Normal = 1,
@@ -43,6 +43,21 @@ export class ChartInfo {
 export class HitObjects {
   private constructor();
   free(): void;
+}
+export class Key {
+  private constructor();
+  free(): void;
+  static empty(): Key;
+  static normal(): Key;
+  static slider_start(value?: number | null): Key;
+  static slider_end(): Key;
+  static mine(): Key;
+  static fake(): Key;
+  static unknown(): Key;
+  slider_end_time(): number | undefined;
+  key_type: KeyType;
+  get slider_end_time(): number | undefined;
+  set slider_end_time(value: number | null | undefined);
 }
 export class Metadata {
   private constructor();
@@ -91,16 +106,26 @@ export interface InitOutput {
   readonly __wbg_set_metadata_tags: (a: number, b: number, c: number) => void;
   readonly __wbg_get_metadata_source: (a: number) => [number, number];
   readonly __wbg_set_metadata_source: (a: number, b: number, c: number) => void;
-  readonly __wbg_hitobjects_free: (a: number, b: number) => void;
-  readonly parse_from_osu: (a: number, b: number) => [number, number, number];
-  readonly parse_from_sm: (a: number, b: number) => [number, number, number];
-  readonly parse_from_qua: (a: number, b: number) => [number, number, number];
+  readonly __wbg_timingpoints_free: (a: number, b: number) => void;
   readonly __wbg_get_metadata_title: (a: number) => [number, number];
   readonly __wbg_get_metadata_alt_title: (a: number) => [number, number];
   readonly __wbg_get_metadata_artist: (a: number) => [number, number];
   readonly __wbg_set_metadata_title: (a: number, b: number, c: number) => void;
   readonly __wbg_set_metadata_alt_title: (a: number, b: number, c: number) => void;
   readonly __wbg_set_metadata_artist: (a: number, b: number, c: number) => void;
+  readonly __wbg_key_free: (a: number, b: number) => void;
+  readonly __wbg_get_key_key_type: (a: number) => number;
+  readonly __wbg_set_key_key_type: (a: number, b: number) => void;
+  readonly __wbg_get_key_slider_end_time: (a: number) => number;
+  readonly __wbg_set_key_slider_end_time: (a: number, b: number) => void;
+  readonly key_empty: () => number;
+  readonly key_normal: () => number;
+  readonly key_slider_start: (a: number) => number;
+  readonly key_slider_end: () => number;
+  readonly key_mine: () => number;
+  readonly key_fake: () => number;
+  readonly key_unknown: () => number;
+  readonly key_slider_end_time: (a: number) => number;
   readonly __wbg_chart_free: (a: number, b: number) => void;
   readonly __wbg_get_chart_metadata: (a: number) => number;
   readonly __wbg_set_chart_metadata: (a: number, b: number) => void;
@@ -110,10 +135,13 @@ export interface InitOutput {
   readonly __wbg_set_chart_timing_points: (a: number, b: number) => void;
   readonly __wbg_get_chart_hitobjects: (a: number) => number;
   readonly __wbg_set_chart_hitobjects: (a: number, b: number) => void;
-  readonly __wbg_timingpoints_free: (a: number, b: number) => void;
+  readonly __wbg_hitobjects_free: (a: number, b: number) => void;
   readonly write_to_osu: (a: number) => [number, number, number, number];
   readonly write_to_sm: (a: number) => [number, number, number, number];
   readonly write_to_qua: (a: number) => [number, number, number, number];
+  readonly parse_from_osu: (a: number, b: number) => [number, number, number];
+  readonly parse_from_sm: (a: number, b: number) => [number, number, number];
+  readonly parse_from_qua: (a: number, b: number) => [number, number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

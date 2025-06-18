@@ -114,57 +114,16 @@ function passArrayJsValueToWasm0(array, malloc) {
     return ptr;
 }
 
-function takeFromExternrefTable0(idx) {
-    const value = wasm.__wbindgen_export_0.get(idx);
-    wasm.__externref_table_dealloc(idx);
-    return value;
-}
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_osu(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_osu(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_sm(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_sm(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_qua(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_qua(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
-}
-
 function _assertClass(instance, klass) {
     if (!(instance instanceof klass)) {
         throw new Error(`expected instance of ${klass.name}`);
     }
+}
+
+function takeFromExternrefTable0(idx) {
+    const value = wasm.__wbindgen_export_0.get(idx);
+    wasm.__externref_table_dealloc(idx);
+    return value;
 }
 /**
  * @param {Chart} chart
@@ -236,6 +195,48 @@ export function write_to_qua(chart) {
     } finally {
         wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_osu(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_osu(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_sm(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_sm(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
+}
+
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_qua(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_qua(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
 }
 
 /**
@@ -531,6 +532,116 @@ export class HitObjects {
     free() {
         const ptr = this.__destroy_into_raw();
         wasm.__wbg_hitobjects_free(ptr, 0);
+    }
+}
+
+const KeyFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_key_free(ptr >>> 0, 1));
+
+export class Key {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(Key.prototype);
+        obj.__wbg_ptr = ptr;
+        KeyFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        KeyFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_key_free(ptr, 0);
+    }
+    /**
+     * @returns {KeyType}
+     */
+    get key_type() {
+        const ret = wasm.__wbg_get_key_key_type(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {KeyType} arg0
+     */
+    set key_type(arg0) {
+        wasm.__wbg_set_key_key_type(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    get slider_end_time() {
+        const ret = wasm.__wbg_get_key_slider_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @param {number | null} [arg0]
+     */
+    set slider_end_time(arg0) {
+        wasm.__wbg_set_key_slider_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
+    }
+    /**
+     * @returns {Key}
+     */
+    static empty() {
+        const ret = wasm.key_empty();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {Key}
+     */
+    static normal() {
+        const ret = wasm.key_normal();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @param {number | null} [value]
+     * @returns {Key}
+     */
+    static slider_start(value) {
+        const ret = wasm.key_slider_start(isLikeNone(value) ? 0x100000001 : (value) >> 0);
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {Key}
+     */
+    static slider_end() {
+        const ret = wasm.key_slider_end();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {Key}
+     */
+    static mine() {
+        const ret = wasm.key_mine();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {Key}
+     */
+    static fake() {
+        const ret = wasm.key_fake();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {Key}
+     */
+    static unknown() {
+        const ret = wasm.key_unknown();
+        return Key.__wrap(ret);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    slider_end_time() {
+        const ret = wasm.key_slider_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
     }
 }
 
