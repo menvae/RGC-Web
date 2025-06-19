@@ -3,10 +3,15 @@
 # RGC (Rhythm Game Converter)
 RGC is a web-based tool designed to make converting rhythm game maps more convenient. While most existing converters require downloading software, RGC tries to make conversion simple and accessible directly in the browser.
 
-## Project Overview
-\> __Web-Client__ (You are here)
+## Dependencies
+[RGC-Chart](https://github.com/menvae/RGC-Chart) | Map Conversion
 
-\> __[RGC-Chart (Chart conversion)](https://github.com/menvae/RGC-Chart)__
+[ZenFS](https://github.com/zen-fs/core) | File System
+
+[Libarchivejs](https://github.com/nika-begiashvili/libarchivejs) | Extracting archives
+
+[JSZip](https://github.com/Stuk/jszip) | Creating Zip archives
+
 
 ## Building
 To build RGC-Web you'll first have to clone this repo
