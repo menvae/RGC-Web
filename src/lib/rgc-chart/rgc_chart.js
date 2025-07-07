@@ -87,43 +87,57 @@ function getDataViewMemory0() {
     return cachedDataViewMemory0;
 }
 
-function getArrayJsValueFromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    const mem = getDataViewMemory0();
-    const result = [];
-    for (let i = ptr; i < ptr + 4 * len; i += 4) {
-        result.push(wasm.__wbindgen_export_0.get(mem.getUint32(i, true)));
+function takeFromExternrefTable0(idx) {
+    const value = wasm.__wbindgen_export_0.get(idx);
+    wasm.__externref_table_dealloc(idx);
+    return value;
+}
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_osu(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_osu(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
     }
-    wasm.__externref_drop_slice(ptr, len);
-    return result;
+    return Chart.__wrap(ret[0]);
 }
 
-function addToExternrefTable0(obj) {
-    const idx = wasm.__externref_table_alloc();
-    wasm.__wbindgen_export_0.set(idx, obj);
-    return idx;
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_sm(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_sm(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return Chart.__wrap(ret[0]);
 }
 
-function passArrayJsValueToWasm0(array, malloc) {
-    const ptr = malloc(array.length * 4, 4) >>> 0;
-    for (let i = 0; i < array.length; i++) {
-        const add = addToExternrefTable0(array[i]);
-        getDataViewMemory0().setUint32(ptr + 4 * i, add, true);
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_qua(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_qua(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
     }
-    WASM_VECTOR_LEN = array.length;
-    return ptr;
+    return Chart.__wrap(ret[0]);
 }
 
 function _assertClass(instance, klass) {
     if (!(instance instanceof klass)) {
         throw new Error(`expected instance of ${klass.name}`);
     }
-}
-
-function takeFromExternrefTable0(idx) {
-    const value = wasm.__wbindgen_export_0.get(idx);
-    wasm.__externref_table_dealloc(idx);
-    return value;
 }
 /**
  * @param {Chart} chart
@@ -197,48 +211,41 @@ export function write_to_qua(chart) {
     }
 }
 
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_osu(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_osu(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
+function getArrayJsValueFromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    const mem = getDataViewMemory0();
+    const result = [];
+    for (let i = ptr; i < ptr + 4 * len; i += 4) {
+        result.push(wasm.__wbindgen_export_0.get(mem.getUint32(i, true)));
     }
-    return Chart.__wrap(ret[0]);
+    wasm.__externref_drop_slice(ptr, len);
+    return result;
 }
 
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_sm(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_sm(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Chart.__wrap(ret[0]);
+function addToExternrefTable0(obj) {
+    const idx = wasm.__externref_table_alloc();
+    wasm.__wbindgen_export_0.set(idx, obj);
+    return idx;
 }
 
-/**
- * @param {string} raw_chart
- * @returns {Chart}
- */
-export function parse_from_qua(raw_chart) {
-    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse_from_qua(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
+function passArrayJsValueToWasm0(array, malloc) {
+    const ptr = malloc(array.length * 4, 4) >>> 0;
+    for (let i = 0; i < array.length; i++) {
+        const add = addToExternrefTable0(array[i]);
+        getDataViewMemory0().setUint32(ptr + 4 * i, add, true);
     }
-    return Chart.__wrap(ret[0]);
+    WASM_VECTOR_LEN = array.length;
+    return ptr;
 }
-
+/**
+ * @enum {0 | 1 | 2 | 3}
+ */
+export const HitSoundType = Object.freeze({
+    Normal: 0, "0": "Normal",
+    Clap: 1, "1": "Clap",
+    Whistle: 2, "2": "Whistle",
+    Finish: 3, "3": "Finish",
+});
 /**
  * @enum {0 | 1 | 2 | 3 | 4 | 5 | 6}
  */
@@ -344,6 +351,24 @@ export class Chart {
         _assertClass(arg0, HitObjects);
         var ptr0 = arg0.__destroy_into_raw();
         wasm.__wbg_set_chart_hitobjects(this.__wbg_ptr, ptr0);
+    }
+    /**
+     * @returns {SoundBank | undefined}
+     */
+    get soundbank() {
+        const ret = wasm.__wbg_get_chart_soundbank(this.__wbg_ptr);
+        return ret === 0 ? undefined : SoundBank.__wrap(ret);
+    }
+    /**
+     * @param {SoundBank | null} [arg0]
+     */
+    set soundbank(arg0) {
+        let ptr0 = 0;
+        if (!isLikeNone(arg0)) {
+            _assertClass(arg0, SoundBank);
+            ptr0 = arg0.__destroy_into_raw();
+        }
+        wasm.__wbg_set_chart_soundbank(this.__wbg_ptr, ptr0);
     }
 }
 
@@ -645,6 +670,109 @@ export class Key {
     }
 }
 
+const KeySoundFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_keysound_free(ptr >>> 0, 1));
+
+export class KeySound {
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        KeySoundFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_keysound_free(ptr, 0);
+    }
+    /**
+     * @returns {number}
+     */
+    get volume() {
+        const ret = wasm.__wbg_get_keysound_volume(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set volume(arg0) {
+        wasm.__wbg_set_keysound_volume(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {HitSoundType}
+     */
+    get hitsound_type() {
+        const ret = wasm.__wbg_get_keysound_hitsound_type(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {HitSoundType} arg0
+     */
+    set hitsound_type(arg0) {
+        wasm.__wbg_set_keysound_hitsound_type(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    get sample() {
+        const ret = wasm.__wbg_get_keysound_sample(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @param {number | null} [arg0]
+     */
+    set sample(arg0) {
+        wasm.__wbg_set_keysound_sample(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >>> 0);
+    }
+    /**
+     * @returns {boolean}
+     */
+    get has_custom() {
+        const ret = wasm.__wbg_get_keysound_has_custom(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {boolean} arg0
+     */
+    set has_custom(arg0) {
+        wasm.__wbg_set_keysound_has_custom(this.__wbg_ptr, arg0);
+    }
+}
+
+const KeySoundRowFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_keysoundrow_free(ptr >>> 0, 1));
+
+export class KeySoundRow {
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        KeySoundRowFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_keysoundrow_free(ptr, 0);
+    }
+    /**
+     * @returns {boolean}
+     */
+    get is_empty() {
+        const ret = wasm.__wbg_get_keysoundrow_is_empty(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {boolean} arg0
+     */
+    set is_empty(arg0) {
+        wasm.__wbg_set_keysoundrow_is_empty(this.__wbg_ptr, arg0);
+    }
+}
+
 const MetadataFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_metadata_free(ptr >>> 0, 1));
@@ -691,7 +819,7 @@ export class Metadata {
     set title(arg0) {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_chartinfo_difficulty_name(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_metadata_title(this.__wbg_ptr, ptr0, len0);
     }
     /**
      * @returns {string}
@@ -714,7 +842,7 @@ export class Metadata {
     set alt_title(arg0) {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_chartinfo_bg_path(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_metadata_alt_title(this.__wbg_ptr, ptr0, len0);
     }
     /**
      * @returns {string}
@@ -737,7 +865,7 @@ export class Metadata {
     set artist(arg0) {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_chartinfo_song_path(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_metadata_artist(this.__wbg_ptr, ptr0, len0);
     }
     /**
      * @returns {string}
@@ -850,6 +978,240 @@ export class Metadata {
     }
 }
 
+const SoundBankFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_soundbank_free(ptr >>> 0, 1));
+
+export class SoundBank {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(SoundBank.prototype);
+        obj.__wbg_ptr = ptr;
+        SoundBankFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        SoundBankFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_soundbank_free(ptr, 0);
+    }
+    /**
+     * @returns {string[]}
+     */
+    get audio_tracks() {
+        const ret = wasm.__wbg_get_soundbank_audio_tracks(this.__wbg_ptr);
+        var v1 = getArrayJsValueFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
+     * @param {string[]} arg0
+     */
+    set audio_tracks(arg0) {
+        const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.__wbg_set_soundbank_audio_tracks(this.__wbg_ptr, ptr0, len0);
+    }
+    /**
+     * @returns {SoundEffect[]}
+     */
+    get sound_effects() {
+        const ret = wasm.__wbg_get_soundbank_sound_effects(this.__wbg_ptr);
+        var v1 = getArrayJsValueFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
+     * @param {SoundEffect[]} arg0
+     */
+    set sound_effects(arg0) {
+        const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.__wbg_set_soundbank_sound_effects(this.__wbg_ptr, ptr0, len0);
+    }
+    constructor() {
+        const ret = wasm.soundbank_new();
+        this.__wbg_ptr = ret >>> 0;
+        SoundBankFinalization.register(this, this.__wbg_ptr, this);
+        return this;
+    }
+    /**
+     * @param {string} path
+     * @returns {number}
+     */
+    add_sound_sample(path) {
+        const ptr0 = passStringToWasm0(path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.soundbank_add_sound_sample(this.__wbg_ptr, ptr0, len0);
+        return ret >>> 0;
+    }
+    /**
+     * @param {number} index
+     * @param {string} path
+     */
+    add_sound_sample_with_index(index, path) {
+        const ptr0 = passStringToWasm0(path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.soundbank_add_sound_sample_with_index(this.__wbg_ptr, index, ptr0, len0);
+    }
+    /**
+     * @param {SoundEffect} sound_effect
+     */
+    add_sound_effect(sound_effect) {
+        _assertClass(sound_effect, SoundEffect);
+        var ptr0 = sound_effect.__destroy_into_raw();
+        wasm.soundbank_add_sound_effect(this.__wbg_ptr, ptr0);
+    }
+    /**
+     * @param {number} index
+     * @returns {string | undefined}
+     */
+    get_sound_sample(index) {
+        const ret = wasm.soundbank_get_sound_sample(this.__wbg_ptr, index);
+        let v1;
+        if (ret[0] !== 0) {
+            v1 = getStringFromWasm0(ret[0], ret[1]).slice();
+            wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+        }
+        return v1;
+    }
+    /**
+     * @param {string} sample_path
+     * @returns {number | undefined}
+     */
+    get_index_sample(sample_path) {
+        const ptr0 = passStringToWasm0(sample_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.soundbank_get_index_sample(this.__wbg_ptr, ptr0, len0);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @returns {string[]}
+     */
+    get_sample_paths() {
+        const ret = wasm.soundbank_get_sample_paths(this.__wbg_ptr);
+        var v1 = getArrayJsValueFromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
+     * @param {string} path
+     * @returns {boolean}
+     */
+    contains_path(path) {
+        const ptr0 = passStringToWasm0(path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.soundbank_contains_path(this.__wbg_ptr, ptr0, len0);
+        return ret !== 0;
+    }
+    /**
+     * @returns {number}
+     */
+    sample_count() {
+        const ret = wasm.soundbank_sample_count(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * @returns {boolean}
+     */
+    is_empty() {
+        const ret = wasm.soundbank_is_empty(this.__wbg_ptr);
+        return ret !== 0;
+    }
+}
+
+const SoundEffectFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_soundeffect_free(ptr >>> 0, 1));
+
+export class SoundEffect {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(SoundEffect.prototype);
+        obj.__wbg_ptr = ptr;
+        SoundEffectFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    static __unwrap(jsValue) {
+        if (!(jsValue instanceof SoundEffect)) {
+            return 0;
+        }
+        return jsValue.__destroy_into_raw();
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        SoundEffectFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_soundeffect_free(ptr, 0);
+    }
+    /**
+     * @returns {number}
+     */
+    get time() {
+        const ret = wasm.__wbg_get_soundeffect_time(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set time(arg0) {
+        wasm.__wbg_set_soundeffect_time(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get volume() {
+        const ret = wasm.__wbg_get_soundeffect_volume(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set volume(arg0) {
+        wasm.__wbg_set_soundeffect_volume(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get sample() {
+        const ret = wasm.__wbg_get_soundeffect_sample(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set sample(arg0) {
+        wasm.__wbg_set_soundeffect_sample(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @param {number} time
+     * @param {number} volume
+     * @param {number} sample
+     */
+    constructor(time, volume, sample) {
+        const ret = wasm.soundeffect_new(time, volume, sample);
+        this.__wbg_ptr = ret >>> 0;
+        SoundEffectFinalization.register(this, this.__wbg_ptr, this);
+        return this;
+    }
+}
+
 const TimingPointsFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_timingpoints_free(ptr >>> 0, 1));
@@ -911,6 +1273,14 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbg_soundeffect_new = function(arg0) {
+        const ret = SoundEffect.__wrap(arg0);
+        return ret;
+    };
+    imports.wbg.__wbg_soundeffect_unwrap = function(arg0) {
+        const ret = SoundEffect.__unwrap(arg0);
+        return ret;
+    };
     imports.wbg.__wbindgen_error_new = function(arg0, arg1) {
         const ret = new Error(getStringFromWasm0(arg0, arg1));
         return ret;
