@@ -44,17 +44,7 @@ const currentPath = Astro.url.pathname;
 </html>
 
 <style>
-    :root {      
-        --navbar-color: #c09924;
-        --logo-gradient: linear-gradient(to right, transparent, var(--navbar-color));
-        --accent-color: #a08123;
-        --accent-highlight: #ffffff20;
-        --navbutton-separator-color: #ffd050;
-        --footer-accent-color: #36342d;
-        --footer-accent-color-lighter: #47453c;
-        --background-color: #2a2822;
-        --text-color: #f5f5f5;
-    }
+    
     
     main {
 		font-size: large;
@@ -136,6 +126,18 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <style is:global>
+    :root {      
+        /* --navbar-color: #c09924; */
+        --logo-gradient: linear-gradient(to right, transparent, var(--navbar-color));
+        --accent-color: #a08123;
+        --accent-highlight: #ffffff20;
+        --navbutton-separator-color: #ffd050;
+        --footer-accent-color: #36342d;
+        --footer-accent-color-lighter: #47453c;
+        --background-color: #2a2822;
+        --text-color: #f5f5f5;
+    }
+
     *::-webkit-scrollbar {
     height: 6px;
     width: 6px;

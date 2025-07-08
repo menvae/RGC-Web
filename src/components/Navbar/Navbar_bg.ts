@@ -27,6 +27,19 @@ function updateNavColor() {
     }
 };
 
+function updateParticleNavLoop() {
+    try {
+        particleSystem?.updateBaseColor();
+        updateNavColor();
+
+        console.log('update nav color');
+        setTimeout(updateParticleNavLoop, 500);
+    } catch (error) {
+        console.error('Failed to update nav color:', error);
+        setTimeout(updateParticleNavLoop, 500);
+    }
+}
+
 document.addEventListener('page:changed', () => {
     updateNavColor();
     particleSystem?.updateBaseColor();
@@ -37,3 +50,5 @@ document.addEventListener("page:transitionend", () => {
     updateNavColor();
     particleSystem?.updateBaseColor();
 });
+
+updateParticleNavLoop()
