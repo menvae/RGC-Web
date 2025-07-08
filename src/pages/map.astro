@@ -9,70 +9,81 @@ import ConvertResult from '../components/ConvertResult.astro';
 ---
 
 <App subtitle="Map Conversion">
-    <Content>
+  <Content>
 
-        <section>
-            <h1>Map Conversion</h1>
-            <p>Convert your maps or charts here.</p>
-            <p>You can find supported formats below.</a></p>
-        </section>
-
-        <hr />
-        
-        <AppForm activeTab="mania" tabName="mode">
-            <AppFormTab title="Mania">
-              <FileSelector
-              accept=".osu, .sm, .zip, .rar, .tar, .7z, .osz" 
-              multiple
-              />
-              <fieldset>
-                <legend>Conversion Options</legend>
-                <div style="display: flex; justify-content: flex-end;">
-                  <div style="display: flex; align-items: center; gap: 10px; white-space: nowrap;">
-                      <p style="margin: 0; white-space: nowrap;">Convert to</p>
-                      <Dropdown id="ChartType" name="type">
-                        <optgroup label="Osu">
-                          <option value="osu">.osu</option>
-                        </optgroup>
-                        <optgroup label="Quaver">
-                          <option value="qua">.qua</option>
-                        </optgroup>
-                        <optgroup label="Etterna">
-                          <option value="sm">.sm</option>
-                        </optgroup>
-                        <optgroup label="Stepmania">
-                          <option value="sm">.sm</option>
-                        </optgroup>
-                      </Dropdown>
-                  </div>
-                </div>
-              </fieldset>
-              <div style="justify-content: center; align-items: center; display: flex; flex-direction: column; margin-top: 2rem;">
-                <button disabled type="submit" id="map-convert-btn" class="convert-button">Convert</button>
-              </div>
-            </AppFormTab>
-
-          </AppForm>
-
-          <br />
-
-        <ConvertResult>
-      </ConvertResult>
+      <section>
+          <h1>Map Conversion</h1>
+          <p>Convert your maps or charts here.</p>
+          <p>You can find supported formats below.</a></p>
+      </section>
 
       <hr />
-        <section>
-          <h2>Supported Formats</h2>
-          <ul>
-            <li>.osu</li>
-            <li>.qua</li>
-            <li>.sm</li>
-            <li>.osz</li>
-            <li>.qp</li>
-            <li>Most archives also work.</li>
-        </section>
+      
+      <AppForm activeTab="mania" tabName="mode">
+          <AppFormTab title="Mania">
+            <FileSelector
+            accept=".osu, .sm, .zip, .rar, .tar, .7z, .osz" 
+            multiple
+            />
+            <fieldset>
+              <legend>Conversion Options</legend>
+              <div style="display: flex; justify-content: flex-end;">
+                <div style="display: flex; align-items: center; gap: 10px; white-space: nowrap;">
+                    <p style="margin: 0; white-space: nowrap;">Convert to</p>
+                    <Dropdown id="ChartType" name="type">
+                      <optgroup label="Osu">
+                        <option value="osu">.osu</option>
+                      </optgroup>
+                      <optgroup label="Quaver">
+                        <option value="qua">.qua</option>
+                      </optgroup>
+                      <optgroup label="Etterna">
+                        <option value="sm">.sm</option>
+                      </optgroup>
+                      <optgroup label="Stepmania">
+                        <option value="sm">.sm</option>
+                      </optgroup>
+                    </Dropdown>
+                </div>
+              </div>
+            </fieldset>
+            <div style="justify-content: center; align-items: center; display: flex; flex-direction: column; margin-top: 2rem;">
+              <button disabled type="submit" id="map-convert-btn" class="convert-button">Convert</button>
+            </div>
+          </AppFormTab>
 
-    </Content>
+        </AppForm>
+
+        <br />
+
+      <ConvertResult>
+    </ConvertResult>
+
+    <hr />
+      <section>
+        <h2>Supported Formats</h2>
+        <ul>
+          <li>.osu</li>
+          <li>.qua</li>
+          <li>.sm</li>
+          <li>.osz</li>
+          <li>.qp</li>
+          <li>Most archives also work.</li>
+      </section>
+
+  </Content>
+  
+  <script is:inline>
+    // this is really lazy but works lol
+    const params = new URLSearchParams();
+    params.append("mode", "mania");
+    params.append("type", "osu");
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+  </script>
 </App>
+
+
 
 <style>
 	:root {

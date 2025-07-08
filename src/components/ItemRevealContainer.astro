@@ -1,0 +1,117 @@
+---
+---
+
+<div class="reveal-container-parent">
+  <slot />
+</div>
+
+<script is:inline>
+  function cleanContent(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    doc.querySelectorAll('script, style, iframe, frame, object, embed, link').forEach(el => el.remove());
+    doc.querySelectorAll('*').forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.startsWith('on')) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    return doc.body.innerHTML;
+  }
+
+  const parentContainer = document.currentScript.parentElement;
+  
+  async function fetchContent(container, content, url) {
+    const placeholder = content.querySelector('.content-placeholder');
+    if (!placeholder) return;
+    
+    try {
+      placeholder.textContent = 'Loading...';
+      content.style.maxHeight = '100px';
+      
+      const response = await fetch(url);
+      if (response.ok) {
+        const text = await response.text();
+        const clean = cleanContent(text);
+        placeholder.innerHTML = clean;
+      } else {
+        placeholder.textContent = `Error: ${response.status}`;
+      }
+    } catch (error) {
+      placeholder.textContent = 'Failed to load content';
+    } finally {
+      updateContentHeight(content);
+    }
+  }
+  
+  function updateContentHeight(content) {
+    content.style.setProperty('--max-height', `${content.scrollHeight}px`);
+    content.style.maxHeight = 'var(--max-height)';
+  }
+  
+  function initializeRevealItem(container) {
+    const button = container.querySelector('.reveal-header');
+    const content = container.querySelector('.reveal-content');
+    const url = container.getAttribute('data-url');
+    
+    let isExpanded = container.getAttribute('data-expanded') === 'true';
+    
+    if (isExpanded && url) {
+      fetchContent(container, content, url);
+    } else if (isExpanded) {
+      updateContentHeight(content);
+    }
+    
+    button.addEventListener('click', () => {
+      isExpanded = !isExpanded;
+      
+      container.setAttribute('data-expanded', isExpanded);
+      button.setAttribute('aria-expanded', isExpanded);
+      
+      if (isExpanded) {
+        if (url) {
+          fetchContent(container, content, url);
+        } else {
+          updateContentHeight(content);
+        }
+      } else {
+        content.style.maxHeight = '0';
+      }
+    });
+    
+    const resizeHandler = () => {
+      if (isExpanded) {
+        updateContentHeight(content);
+      }
+    };
+    
+    window.addEventListener('resize', resizeHandler);
+    
+    container._cleanup = () => {
+      window.removeEventListener('resize', resizeHandler);
+    };
+  }
+  
+  parentContainer.querySelectorAll('.reveal-item').forEach(initializeRevealItem);
+  
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            if (node.classList && node.classList.contains('reveal-item')) {
+              initializeRevealItem(node);
+            } else if (node.querySelectorAll) {
+              node.querySelectorAll('.reveal-item').forEach(initializeRevealItem);
+            }
+          }
+        });
+      });
+    });
+    
+    observer.observe(parentContainer, {
+      childList: true,
+      subtree: true
+    });
+  }
+</script>

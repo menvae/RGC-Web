@@ -71,8 +71,10 @@ async function switchPage(href: string): Promise<void> {
                   document.head.appendChild(clone);
               });
 
+              document.querySelectorAll('script[data-dynamic]').forEach(script => script.remove());
+
               const scripts = Array.from(mainContent.querySelectorAll('script'));
-              scripts.forEach(oldScript => {
+              scripts.forEach((oldScript, index) => {
                 const newScript = document.createElement('script');
                 
                 if (oldScript.src) {
@@ -80,18 +82,27 @@ async function switchPage(href: string): Promise<void> {
                 } else {
                     const content = oldScript.textContent?.trim();
                     if (content) {
-                       newScript.textContent = content.startsWith('(') || content.startsWith('function') ? 
-                        content : `(function(){${content}})();`;
+                        const uniqueId = `script_${Date.now()}_${index}`;
+                        const wrappedContent = `
+                        (function(window, document) {
+                            // Create isolated scope
+                            const ${uniqueId} = (function() {
+                                ${content}
+                            });
+                            ${uniqueId}();
+                        })(window, document);`;
+                        newScript.textContent = wrappedContent;
                     }
-                    
                 }
         
                 Array.from(oldScript.attributes).forEach(attr => {
                     newScript.setAttribute(attr.name, attr.value);
                 });
                 
+                newScript.setAttribute('data-dynamic', 'true');
+                
                 oldScript.parentNode?.replaceChild(newScript, oldScript);
-});
+            });
 
               window.scrollTo(0, scrollPosition);
               document.dispatchEvent(new CustomEvent('page:changed', {

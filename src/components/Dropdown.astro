@@ -8,7 +8,7 @@ const { id, name } = Astro.props;
     width: 100%;
     max-width: 300px;
   }
-
+  
   select {
     background: color-mix(in srgb, var(--accent-color), 5% black);
     padding: 0.5rem 1rem;
@@ -21,7 +21,7 @@ const { id, name } = Astro.props;
     appearance: none;
     cursor: pointer;
   }
-
+  
   .dropdown-wrapper::after {
     content: "";
     position: absolute;
@@ -37,73 +37,106 @@ const { id, name } = Astro.props;
     pointer-events: none;
     transition: transform 0.2s ease;
   }
-
+  
   .dropdown-wrapper:focus-within::after {
     transform: translateY(-50%) rotate(180deg);
   }
-
+  
   optgroup {
     opacity: 0.5;
     padding: 0.5rem 0;
   }
-
+  
   optgroup[label] {
     border-top: 1px solid white;
   }
-
+  
   option {
     padding: 1rem;
   }
 </style>
 
 <div class="dropdown-wrapper">
-  <select id={id} name={name} onchange="updateUrlParam(this)">
+  <select id={id} name={name} data-url-param="true">
     <slot />
   </select>
 </div>
 
 <script is:inline>
-  function updateUrlParam(selectElement) {
-    const url = new URL(window.location.href);
-    const paramName = selectElement.name;
-    const paramValue = selectElement.value;
+  const UrlParamManager = {
+    init() {
+      this.setupEventListeners();
+      this.initializeDropdowns();
+    },
 
-    const params = new URLSearchParams();
-    
-    url.searchParams.forEach((value, key) => {
-      if (key !== paramName) {
-        params.append(key, value);
-      }
-    });
-    
-    if (paramValue) {
-      params.append(paramName, paramValue);
-    }
-
-    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectElements = document.querySelectorAll('select[name]');
-
-    selectElements.forEach(selectElement => {
-      const paramName = selectElement.name;
-      if (urlParams.has(paramName)) {
-        const paramValue = urlParams.get(paramName);
-
-        const optionExists = Array.from(selectElement.options).some(option => option.value === paramValue);
-        if (optionExists) {
-          selectElement.value = paramValue;
-        } else if (selectElement.options.length > 0) {
-          selectElement.selectedIndex = 0; 
+    setupEventListeners() {
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('select[data-url-param="true"]')) {
+          this.updateUrlParam(e.target);
         }
-      } else if (selectElement.options.length > 0) {
-        selectElement.selectedIndex = 0; 
-      }
-      selectElement.addEventListener('change', function() {
-        updateUrlParam(this);
       });
-    });
-  });
+
+      document.addEventListener('page:changed', () => {
+        this.initializeDropdowns();
+      });
+    },
+
+    updateUrlParam(selectElement) {
+      const url = new URL(window.location.href);
+      const paramName = selectElement.name;
+      const paramValue = selectElement.value;
+
+      const params = new URLSearchParams();
+      
+      url.searchParams.forEach((value, key) => {
+        if (key !== paramName) {
+          params.append(key, value);
+        }
+      });
+      
+      if (paramValue) {
+        params.append(paramName, paramValue);
+      }
+
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+
+      document.dispatchEvent(new CustomEvent('urlparam:changed', {
+        detail: {
+          paramName,
+          paramValue,
+          url: newUrl
+        }
+      }));
+    },
+
+    initializeDropdowns() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const selectElements = document.querySelectorAll('select[data-url-param="true"]');
+
+      selectElements.forEach(selectElement => {
+        const paramName = selectElement.name;
+        
+        if (urlParams.has(paramName)) {
+          const paramValue = urlParams.get(paramName);
+          const optionExists = Array.from(selectElement.options)
+            .some(option => option.value === paramValue);
+          
+          if (optionExists) {
+            selectElement.value = paramValue;
+          } else if (selectElement.options.length > 0) {
+            selectElement.selectedIndex = 0;
+          }
+        } else if (selectElement.options.length > 0) {
+          selectElement.selectedIndex = 0;
+        }
+      });
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => UrlParamManager.init());
+  } else {
+    UrlParamManager.init();
+  }
 </script>
