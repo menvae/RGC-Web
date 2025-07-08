@@ -32,7 +32,6 @@ function updateParticleNavLoop() {
         particleSystem?.updateBaseColor();
         updateNavColor();
 
-        console.log('update nav color');
         setTimeout(updateParticleNavLoop, 500);
     } catch (error) {
         console.error('Failed to update nav color:', error);
