@@ -4,9 +4,10 @@
   "version": "0.0.7",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run fix-sitemap",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fix-sitemap": "node scripts/fix-sitemap.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.4.0",
