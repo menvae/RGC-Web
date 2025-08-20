@@ -87,6 +87,39 @@ function getDataViewMemory0() {
     return cachedDataViewMemory0;
 }
 
+function getArrayJsValueFromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    const mem = getDataViewMemory0();
+    const result = [];
+    for (let i = ptr; i < ptr + 4 * len; i += 4) {
+        result.push(wasm.__wbindgen_export_0.get(mem.getUint32(i, true)));
+    }
+    wasm.__externref_drop_slice(ptr, len);
+    return result;
+}
+
+function addToExternrefTable0(obj) {
+    const idx = wasm.__externref_table_alloc();
+    wasm.__wbindgen_export_0.set(idx, obj);
+    return idx;
+}
+
+function passArrayJsValueToWasm0(array, malloc) {
+    const ptr = malloc(array.length * 4, 4) >>> 0;
+    for (let i = 0; i < array.length; i++) {
+        const add = addToExternrefTable0(array[i]);
+        getDataViewMemory0().setUint32(ptr + 4 * i, add, true);
+    }
+    WASM_VECTOR_LEN = array.length;
+    return ptr;
+}
+
+function _assertClass(instance, klass) {
+    if (!(instance instanceof klass)) {
+        throw new Error(`expected instance of ${klass.name}`);
+    }
+}
+
 function takeFromExternrefTable0(idx) {
     const value = wasm.__wbindgen_export_0.get(idx);
     wasm.__externref_table_dealloc(idx);
@@ -134,11 +167,20 @@ export function parse_from_qua(raw_chart) {
     return Chart.__wrap(ret[0]);
 }
 
-function _assertClass(instance, klass) {
-    if (!(instance instanceof klass)) {
-        throw new Error(`expected instance of ${klass.name}`);
+/**
+ * @param {string} raw_chart
+ * @returns {Chart}
+ */
+export function parse_from_fsc(raw_chart) {
+    const ptr0 = passStringToWasm0(raw_chart, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_from_fsc(ptr0, len0);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
     }
+    return Chart.__wrap(ret[0]);
 }
+
 /**
  * @param {Chart} chart
  * @returns {string}
@@ -211,32 +253,41 @@ export function write_to_qua(chart) {
     }
 }
 
-function getArrayJsValueFromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    const mem = getDataViewMemory0();
-    const result = [];
-    for (let i = ptr; i < ptr + 4 * len; i += 4) {
-        result.push(wasm.__wbindgen_export_0.get(mem.getUint32(i, true)));
+/**
+ * @param {Chart} chart
+ * @returns {string}
+ */
+export function write_to_fsc(chart) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        _assertClass(chart, Chart);
+        const ret = wasm.write_to_fsc(chart.__wbg_ptr);
+        var ptr1 = ret[0];
+        var len1 = ret[1];
+        if (ret[3]) {
+            ptr1 = 0; len1 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred2_0 = ptr1;
+        deferred2_1 = len1;
+        return getStringFromWasm0(ptr1, len1);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
-    wasm.__externref_drop_slice(ptr, len);
-    return result;
 }
 
-function addToExternrefTable0(obj) {
-    const idx = wasm.__externref_table_alloc();
-    wasm.__wbindgen_export_0.set(idx, obj);
-    return idx;
-}
-
-function passArrayJsValueToWasm0(array, malloc) {
-    const ptr = malloc(array.length * 4, 4) >>> 0;
-    for (let i = 0; i < array.length; i++) {
-        const add = addToExternrefTable0(array[i]);
-        getDataViewMemory0().setUint32(ptr + 4 * i, add, true);
-    }
-    WASM_VECTOR_LEN = array.length;
-    return ptr;
-}
+/**
+ * @enum {0 | 1 | 2 | 3 | 4 | 5}
+ */
+export const CatchHitobjectType = Object.freeze({
+    Empty: 0, "0": "Empty",
+    Fruit: 1, "1": "Fruit",
+    Juice: 2, "2": "Juice",
+    Banana: 3, "3": "Banana",
+    Hyperfruit: 4, "4": "Hyperfruit",
+    Unknown: 5, "5": "Unknown",
+});
 /**
  * @enum {0 | 1 | 2 | 3}
  */
@@ -259,6 +310,30 @@ export const KeyType = Object.freeze({
     Unknown: 6, "6": "Unknown",
 });
 /**
+ * @enum {0 | 1 | 2 | 3 | 4}
+ */
+export const OsuHitobjectType = Object.freeze({
+    Empty: 0, "0": "Empty",
+    HitCircle: 1, "1": "HitCircle",
+    Slider: 2, "2": "Slider",
+    Spinner: 3, "3": "Spinner",
+    Unknown: 4, "4": "Unknown",
+});
+/**
+ * @enum {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}
+ */
+export const TaikoHitobjectType = Object.freeze({
+    Empty: 0, "0": "Empty",
+    Don: 1, "1": "Don",
+    Kat: 2, "2": "Kat",
+    BonusDon: 3, "3": "BonusDon",
+    BonusKat: 4, "4": "BonusKat",
+    DrumRoll: 5, "5": "DrumRoll",
+    BonusDrumRoll: 6, "6": "BonusDrumRoll",
+    Balloon: 7, "7": "Balloon",
+    Unknown: 8, "8": "Unknown",
+});
+/**
  * @enum {0 | 1 | 2}
  */
 export const TimingChangeType = Object.freeze({
@@ -266,6 +341,146 @@ export const TimingChangeType = Object.freeze({
     Sv: 1, "1": "Sv",
     Stop: 2, "2": "Stop",
 });
+
+const CatchHitobjectFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_catchhitobject_free(ptr >>> 0, 1));
+
+export class CatchHitobject {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(CatchHitobject.prototype);
+        obj.__wbg_ptr = ptr;
+        CatchHitobjectFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        CatchHitobjectFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_catchhitobject_free(ptr, 0);
+    }
+    /**
+     * @returns {CatchHitobjectType}
+     */
+    get object_type() {
+        const ret = wasm.__wbg_get_catchhitobject_object_type(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {CatchHitobjectType} arg0
+     */
+    set object_type(arg0) {
+        wasm.__wbg_set_catchhitobject_object_type(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get x_position() {
+        const ret = wasm.__wbg_get_catchhitobject_x_position(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set x_position(arg0) {
+        wasm.__wbg_set_catchhitobject_x_position(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    get end_time() {
+        const ret = wasm.__wbg_get_catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @param {number | null} [arg0]
+     */
+    set end_time(arg0) {
+        wasm.__wbg_set_catchhitobject_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
+    }
+    /**
+     * @returns {boolean}
+     */
+    get hyperdash() {
+        const ret = wasm.__wbg_get_catchhitobject_hyperdash(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {boolean} arg0
+     */
+    set hyperdash(arg0) {
+        wasm.__wbg_set_catchhitobject_hyperdash(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {CatchHitobject}
+     */
+    static empty() {
+        const ret = wasm.catchhitobject_empty();
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x_position
+     * @returns {CatchHitobject}
+     */
+    static fruit(x_position) {
+        const ret = wasm.catchhitobject_fruit(x_position);
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x_position
+     * @returns {CatchHitobject}
+     */
+    static juice(x_position) {
+        const ret = wasm.catchhitobject_juice(x_position);
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x_position
+     * @param {number} end_time
+     * @returns {CatchHitobject}
+     */
+    static banana(x_position, end_time) {
+        const ret = wasm.catchhitobject_banana(x_position, end_time);
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x_position
+     * @returns {CatchHitobject}
+     */
+    static hyperfruit(x_position) {
+        const ret = wasm.catchhitobject_hyperfruit(x_position);
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {CatchHitobject}
+     */
+    static unknown() {
+        const ret = wasm.catchhitobject_unknown();
+        return CatchHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    end_time() {
+        const ret = wasm.catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @returns {boolean}
+     */
+    is_hyperdash() {
+        const ret = wasm.catchhitobject_is_hyperdash(this.__wbg_ptr);
+        return ret !== 0;
+    }
+}
 
 const ChartFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
@@ -421,6 +636,32 @@ export class ChartInfo {
         wasm.__wbg_set_chartinfo_difficulty_name(this.__wbg_ptr, ptr0, len0);
     }
     /**
+     * @returns {number}
+     */
+    get od() {
+        const ret = wasm.__wbg_get_chartinfo_od(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set od(arg0) {
+        wasm.__wbg_set_chartinfo_od(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get hp() {
+        const ret = wasm.__wbg_get_chartinfo_hp(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set hp(arg0) {
+        wasm.__wbg_set_chartinfo_hp(this.__wbg_ptr, arg0);
+    }
+    /**
      * @returns {string}
      */
     get bg_path() {
@@ -442,6 +683,29 @@ export class ChartInfo {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         wasm.__wbg_set_chartinfo_bg_path(this.__wbg_ptr, ptr0, len0);
+    }
+    /**
+     * @returns {string}
+     */
+    get video_path() {
+        let deferred1_0;
+        let deferred1_1;
+        try {
+            const ret = wasm.__wbg_get_chartinfo_video_path(this.__wbg_ptr);
+            deferred1_0 = ret[0];
+            deferred1_1 = ret[1];
+            return getStringFromWasm0(ret[0], ret[1]);
+        } finally {
+            wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
+        }
+    }
+    /**
+     * @param {string} arg0
+     */
+    set video_path(arg0) {
+        const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.__wbg_set_chartinfo_video_path(this.__wbg_ptr, ptr0, len0);
     }
     /**
      * @returns {string}
@@ -507,21 +771,26 @@ export class ChartInfo {
     }
     /**
      * @param {string} difficulty_name
+     * @param {number} hp
+     * @param {number} od
      * @param {string} bg_path
+     * @param {string} video_path
      * @param {string} song_path
      * @param {number} audio_offset
      * @param {number} preview_time
      * @param {number} key_count
      * @returns {ChartInfo}
      */
-    static new(difficulty_name, bg_path, song_path, audio_offset, preview_time, key_count) {
+    static new(difficulty_name, hp, od, bg_path, video_path, song_path, audio_offset, preview_time, key_count) {
         const ptr0 = passStringToWasm0(difficulty_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(bg_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
-        const ptr2 = passStringToWasm0(song_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const ptr2 = passStringToWasm0(video_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len2 = WASM_VECTOR_LEN;
-        const ret = wasm.chartinfo_new(ptr0, len0, ptr1, len1, ptr2, len2, audio_offset, preview_time, key_count);
+        const ptr3 = passStringToWasm0(song_path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len3 = WASM_VECTOR_LEN;
+        const ret = wasm.chartinfo_new(ptr0, len0, hp, od, ptr1, len1, ptr2, len2, ptr3, len3, audio_offset, preview_time, key_count);
         return ChartInfo.__wrap(ret);
     }
     /**
@@ -602,14 +871,14 @@ export class Key {
      * @returns {number | undefined}
      */
     get slider_end_time() {
-        const ret = wasm.__wbg_get_key_slider_end_time(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_catchhitobject_end_time(this.__wbg_ptr);
         return ret === 0x100000001 ? undefined : ret;
     }
     /**
      * @param {number | null} [arg0]
      */
     set slider_end_time(arg0) {
-        wasm.__wbg_set_key_slider_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
+        wasm.__wbg_set_catchhitobject_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
     }
     /**
      * @returns {Key}
@@ -665,7 +934,7 @@ export class Key {
      * @returns {number | undefined}
      */
     slider_end_time() {
-        const ret = wasm.key_slider_end_time(this.__wbg_ptr);
+        const ret = wasm.catchhitobject_end_time(this.__wbg_ptr);
         return ret === 0x100000001 ? undefined : ret;
     }
 }
@@ -978,6 +1247,189 @@ export class Metadata {
     }
 }
 
+const OsuHitobjectFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_osuhitobject_free(ptr >>> 0, 1));
+
+export class OsuHitobject {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(OsuHitobject.prototype);
+        obj.__wbg_ptr = ptr;
+        OsuHitobjectFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        OsuHitobjectFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_osuhitobject_free(ptr, 0);
+    }
+    /**
+     * @returns {OsuHitobjectType}
+     */
+    get object_type() {
+        const ret = wasm.__wbg_get_osuhitobject_object_type(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {OsuHitobjectType} arg0
+     */
+    set object_type(arg0) {
+        wasm.__wbg_set_osuhitobject_object_type(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get x() {
+        const ret = wasm.__wbg_get_catchhitobject_x_position(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set x(arg0) {
+        wasm.__wbg_set_catchhitobject_x_position(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get y() {
+        const ret = wasm.__wbg_get_osuhitobject_y(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set y(arg0) {
+        wasm.__wbg_set_osuhitobject_y(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    get end_time() {
+        const ret = wasm.__wbg_get_catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @param {number | null} [arg0]
+     */
+    set end_time(arg0) {
+        wasm.__wbg_set_catchhitobject_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
+    }
+    /**
+     * @returns {boolean}
+     */
+    get new_combo() {
+        const ret = wasm.__wbg_get_osuhitobject_new_combo(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {boolean} arg0
+     */
+    set new_combo(arg0) {
+        wasm.__wbg_set_osuhitobject_new_combo(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number}
+     */
+    get combo_skip() {
+        const ret = wasm.__wbg_get_osuhitobject_combo_skip(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} arg0
+     */
+    set combo_skip(arg0) {
+        wasm.__wbg_set_osuhitobject_combo_skip(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {OsuHitobject}
+     */
+    static empty() {
+        const ret = wasm.osuhitobject_empty();
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @returns {OsuHitobject}
+     */
+    static hit_circle(x, y) {
+        const ret = wasm.osuhitobject_hit_circle(x, y);
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @returns {OsuHitobject}
+     */
+    static slider(x, y) {
+        const ret = wasm.osuhitobject_slider(x, y);
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} end_time
+     * @returns {OsuHitobject}
+     */
+    static spinner(end_time) {
+        const ret = wasm.osuhitobject_spinner(end_time);
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {OsuHitobject}
+     */
+    static unknown() {
+        const ret = wasm.osuhitobject_unknown();
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {OsuHitobject}
+     */
+    with_new_combo() {
+        const ptr = this.__destroy_into_raw();
+        const ret = wasm.osuhitobject_with_new_combo(ptr);
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} skip
+     * @returns {OsuHitobject}
+     */
+    with_combo_skip(skip) {
+        const ptr = this.__destroy_into_raw();
+        const ret = wasm.osuhitobject_with_combo_skip(ptr, skip);
+        return OsuHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    end_time() {
+        const ret = wasm.catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @returns {boolean}
+     */
+    is_new_combo() {
+        const ret = wasm.osuhitobject_is_new_combo(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @returns {number}
+     */
+    combo_skip() {
+        const ret = wasm.osuhitobject_combo_skip(this.__wbg_ptr);
+        return ret;
+    }
+}
+
 const SoundBankFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_soundbank_free(ptr >>> 0, 1));
@@ -1209,6 +1661,132 @@ export class SoundEffect {
         this.__wbg_ptr = ret >>> 0;
         SoundEffectFinalization.register(this, this.__wbg_ptr, this);
         return this;
+    }
+}
+
+const TaikoHitobjectFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_taikohitobject_free(ptr >>> 0, 1));
+
+export class TaikoHitobject {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(TaikoHitobject.prototype);
+        obj.__wbg_ptr = ptr;
+        TaikoHitobjectFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        TaikoHitobjectFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_taikohitobject_free(ptr, 0);
+    }
+    /**
+     * @returns {TaikoHitobjectType}
+     */
+    get note_type() {
+        const ret = wasm.__wbg_get_taikohitobject_note_type(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {TaikoHitobjectType} arg0
+     */
+    set note_type(arg0) {
+        wasm.__wbg_set_taikohitobject_note_type(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    get end_time() {
+        const ret = wasm.__wbg_get_catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
+    }
+    /**
+     * @param {number | null} [arg0]
+     */
+    set end_time(arg0) {
+        wasm.__wbg_set_catchhitobject_end_time(this.__wbg_ptr, isLikeNone(arg0) ? 0x100000001 : (arg0) >> 0);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static empty() {
+        const ret = wasm.key_empty();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static don() {
+        const ret = wasm.key_normal();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static kat() {
+        const ret = wasm.taikohitobject_kat();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static bonus_don() {
+        const ret = wasm.key_slider_end();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static bonus_kat() {
+        const ret = wasm.key_mine();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} end_time
+     * @returns {TaikoHitobject}
+     */
+    static drum_roll(end_time) {
+        const ret = wasm.taikohitobject_drum_roll(end_time);
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} end_time
+     * @returns {TaikoHitobject}
+     */
+    static bonus_drum_roll(end_time) {
+        const ret = wasm.taikohitobject_bonus_drum_roll(end_time);
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @param {number} end_time
+     * @returns {TaikoHitobject}
+     */
+    static balloon(end_time) {
+        const ret = wasm.taikohitobject_balloon(end_time);
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {TaikoHitobject}
+     */
+    static unknown() {
+        const ret = wasm.taikohitobject_unknown();
+        return TaikoHitobject.__wrap(ret);
+    }
+    /**
+     * @returns {number | undefined}
+     */
+    end_time() {
+        const ret = wasm.catchhitobject_end_time(this.__wbg_ptr);
+        return ret === 0x100000001 ? undefined : ret;
     }
 }
 
