@@ -170,6 +170,8 @@ function getMapFormat(format: string) {
             return "qp";
         case "osu":
             return "osz";
+        case "fsc":
+            return "fms";
         default:
             return "zip";
     }
@@ -229,6 +231,9 @@ async function parseChart(path: string, mapName: string) {
         case 'qua':
             parser = rgcChart?.parse_from_qua;
             break;
+        case 'fsc':
+            parser = rgcChart?.parse_from_fsc;
+            break;
         default:
             return;
     }
@@ -260,6 +265,9 @@ async function convertChart(chart: Chart, convertType: string): Promise<string |
             break;
         case 'qua':
             converter = rgcChart?.write_to_qua;
+            break;
+        case 'fsc':
+            converter = rgcChart?.write_to_fsc;
             break;
         default:
             convertError(`Converter for "${convertType}" not available`);

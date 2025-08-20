@@ -22,7 +22,7 @@ import ConvertResult from '../components/ConvertResult.astro';
       <AppForm activeTab="mania" tabName="mode">
           <AppFormTab title="Mania">
             <FileSelector
-            accept=".osu, .sm, .zip, .rar, .tar, .7z, .osz" 
+            accept=".osu, .sm, qua, fsc, .zip, .rar, .tar, .7z, .osz, .qp, .fms" 
             multiple
             />
             <fieldset>
@@ -36,6 +36,9 @@ import ConvertResult from '../components/ConvertResult.astro';
                       </optgroup>
                       <optgroup label="Quaver">
                         <option value="qua">.qua</option>
+                      </optgroup>
+                      <optgroup label="fluXis">
+                        <option value="fsc">.fsc</option>
                       </optgroup>
                       <optgroup label="Stepmania">
                         <option value="sm">.sm</option>
@@ -63,8 +66,10 @@ import ConvertResult from '../components/ConvertResult.astro';
           <li>.osu</li>
           <li>.qua</li>
           <li>.sm</li>
+          <li>.fsc</li>
           <li>.osz</li>
           <li>.qp</li>
+          <li>.fms</li>
           <li>Most archives also work.</li>
       </section>
 
