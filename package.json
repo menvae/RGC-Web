@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.4.0",
+    "@astrojs/svelte": "^7.1.0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@zenfs/core": "^2.2.0",
     "astro": "^5.7.9",
-    "typescript": "^5.8.3"
+    "svelte": "^5.38.2",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "vite-plugin-static-copy": "^3.0.0"
