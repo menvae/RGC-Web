@@ -83,7 +83,7 @@ dropdownTemplate.innerHTML = `
   <div class="folder-dropdown-menu" style="
     color: white;
     position: fixed;
-    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    background: #ff69b4;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
