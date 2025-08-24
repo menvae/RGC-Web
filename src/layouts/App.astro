@@ -1,6 +1,6 @@
 ---
 // App.astro
-import Navbar from '../components/Navbar/Navbar.astro';
+import Navbar from '../components/Navbar/Navbar.svelte';
 import Footer from '../components/Footer.astro';
 import Progress from '../components/Progress.astro';
 export interface Props {
@@ -34,7 +34,7 @@ const currentPath = Astro.url.pathname;
         <meta property="og:url" content="https://rgconverter.netlify.app" />
 	</head>
 	<body>
-			<Navbar />
+			<Navbar client:only />
             <Progress />
 		<main>
 			<slot />

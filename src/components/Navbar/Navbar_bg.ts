@@ -1,53 +1,67 @@
 import { OsuParticles } from "../../OsuParticles";
 
 let particleSystem: OsuParticles | null = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    nav = document.getElementById('main-nav');
-    logoThing = document.getElementById('logo-thing')
-    updateNavColor();
-
-    particleSystem = new OsuParticles('navbar_bg');
-    particleSystem.init(70);
-
-    document.addEventListener('astro:before-swap', () => {
-        particleSystem?.destroy();
-    });
-});
-
 let nav: HTMLElement | null = null;
 let logoThing: HTMLElement | null = null;
-nav = document.getElementById('main-nav');
+let updateInterval: NodeJS.Timeout | null = null;
+
+export function initNavbarBg() {
+    nav = document.getElementById('main-nav');
+    logoThing = document.getElementById('logo-thing');
+    
+    if (!nav) {
+        console.warn('main-nav element not found');
+        return;
+    }
+
+    updateNavColor();
+
+    const canvas = document.getElementById('navbar_bg') as HTMLCanvasElement;
+    if (canvas) {
+        particleSystem = new OsuParticles('navbar_bg');
+        particleSystem.init(70);
+    }
+
+    startUpdateLoop();
+}
+
+export function destroyNavbarBg() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+    }
+    
+    particleSystem?.destroy();
+    particleSystem = null;
+}
 
 function updateNavColor() {
     if (nav) {
         const newColor = getComputedStyle(document.documentElement).getPropertyValue('--navbar-color');
         nav.style.backgroundColor = newColor;
     }
-};
-
-function updateParticleNavLoop() {
-    try {
-        particleSystem?.updateBaseColor();
-        updateNavColor();
-
-        setTimeout(updateParticleNavLoop, 500);
-    } catch (error) {
-        console.error('Failed to update nav color:', error);
-        setTimeout(updateParticleNavLoop, 500);
-    }
 }
 
-document.addEventListener('page:changed', () => {
+function startUpdateLoop() {
+    updateInterval = setInterval(() => {
+        try {
+            particleSystem?.updateBaseColor();
+            updateNavColor();
+        } catch (error) {
+            console.error('Failed to update nav color:', error);
+        }
+    }, 500);
+}
+
+export function updateNavbarColors() {
     updateNavColor();
     particleSystem?.updateBaseColor();
-});
+}
 
-document.addEventListener("page:transitionend", () => {
-    logoThing = document.getElementById('logo-thing')
-    updateNavColor();
-    particleSystem?.updateBaseColor();
-});
-
-updateParticleNavLoop()
+if (typeof window !== 'undefined') {
+    document.addEventListener('sveltekit:navigated', () => {
+        nav = document.getElementById('main-nav');
+        logoThing = document.getElementById('logo-thing');
+        updateNavbarColors();
+    });
+}
