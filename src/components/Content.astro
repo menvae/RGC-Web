@@ -1,10 +1,7 @@
----
----
-
 <style>
     .content-box {
-        max-width: 80%;
-        height: auto;
+        width: 100%;
+        max-width: 70%;
         background-color: var(--accent-highlight);
         margin: 2rem auto;
         padding: 0.4rem 2.5rem 2rem;
@@ -12,6 +9,44 @@
         color: var(--text-color);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(30px);
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 1058px) {
+        .content-box {
+            margin-top: 5.5rem;
+            margin-left: auto;
+            width: 100% !important;
+            max-width: 120% !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .content-box {
+            max-width: 95%;
+            margin-left: 0.1rem;
+            padding: 0.4rem 1.5rem 1.5rem;
+            border-radius: 8px;
+        }
+        
+        main {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .content-box {
+            max-width: 100%;
+            margin-left: 0.1rem;
+            padding: 0.4rem 1rem 1rem;
+        }
+        
+        main {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
     }
 </style>
 <div class="content-box">

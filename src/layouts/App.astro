@@ -16,7 +16,7 @@ const currentPath = Astro.url.pathname;
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.webp" />
 		<link rel="stylesheet" href="/css/PageTransitions.css" />
         <link rel="sitemap" href="/sitemap-index.xml" />
@@ -44,12 +44,10 @@ const currentPath = Astro.url.pathname;
 </html>
 
 <style>
-    
-    
     main {
 		font-size: large;
         margin-top: 2rem;
-        max-width: 80%;
+        max-width: 100%;
         margin-left: auto;
         margin-right: auto;
         line-height: 1.3;
@@ -127,7 +125,7 @@ const currentPath = Astro.url.pathname;
 
 <style is:global>
     :root {      
-        /* --navbar-color: #c09924; */
+        --navbar-color: #c09924;
         --logo-gradient: linear-gradient(to right, transparent, var(--navbar-color));
         --accent-color: #a08123;
         --accent-highlight: #ffffff20;

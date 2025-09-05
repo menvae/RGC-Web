@@ -18,7 +18,7 @@
   }
 
   $: hoverBgColor = adjustColorOpacity(bgColor, 0.8);
-  $: activeBgColor = 'rgba(255, 255, 255, 0.9)';
+  $: activeBgColor = 'rgba(255, 255, 255, 1)';
 </script>
 
 <a 

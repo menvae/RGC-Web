@@ -27,7 +27,8 @@ const { title, expanded = false, url } = Astro.props;
     overflow: hidden;
     margin: 1rem 0;
     background-color: rgba(0, 0, 0, 0.103);
-    max-width: 50%;
+    width: 100%;
+    max-width: 100%;
   }
   
   .reveal-header {
@@ -41,12 +42,14 @@ const { title, expanded = false, url } = Astro.props;
     background: none;
     cursor: pointer;
     text-align: left;
+    min-height: 44px;
   }
   
   .arrow {
     margin-right: 0.75rem;
     transition: transform 0.1s ease-out;
     font-size: 0.8em;
+    flex-shrink: 0;
   }
   
   .reveal-item[data-expanded="true"] .arrow {
@@ -56,6 +59,8 @@ const { title, expanded = false, url } = Astro.props;
   .title {
     font-weight: 600;
     transition: color 0.2s;
+    word-break: break-word;
+    line-height: 1.4;
   }
   
   .reveal-header:hover .title {
@@ -78,5 +83,41 @@ const { title, expanded = false, url } = Astro.props;
   
   .content-placeholder {
     min-height: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .reveal-item {
+      margin: 0.75rem 0;
+      border-radius: 16px;
+    }
+    
+    .reveal-header {
+      padding: 0.875rem;
+      font-size: 1rem;
+    }
+    
+    .arrow {
+      margin-right: 0.5rem;
+    }
+    
+    .reveal-content {
+      padding: 0 0.875rem;
+    }
+    
+    .reveal-item[data-expanded="true"] .reveal-content {
+      padding-bottom: 0.875rem;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1058px) {
+    .reveal-item {
+      max-width: 75%;
+    }
+  }
+
+  @media (min-width: 1059px) {
+    .reveal-item {
+      max-width: 50%;
+    }
   }
 </style>
