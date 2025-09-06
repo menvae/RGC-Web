@@ -82,6 +82,11 @@ const currentPath = Astro.url.pathname;
         z-index: -1;
     }
 
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
 	:global(hr) {
         border: none;
         height: 1px;
