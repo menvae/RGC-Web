@@ -330,6 +330,7 @@ async function parseCharts(event: any) {
                 await fileManager.extractTo(file, "/MapImport/");
                 break;
             case 'qp':
+            case 'fms':
             case 'osz':
                 const fullPath = `/MapImport/${fileManager.removeFileExtension(file.name)}`;
                 await fileManager.fs.promises.mkdir(fullPath, { recursive: true });
