@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /
-Allow: /sitemap.xml
+Disallow:
+
 Sitemap: https://rgconverter.netlify.app/sitemap.xml
