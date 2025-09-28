@@ -1,5 +1,3 @@
-import { parseColor } from './helpers';
-
 interface Particle {
     x: number;
     y: number;
@@ -32,9 +30,9 @@ export class OsuParticles {
     private ctx: CanvasRenderingContext2D;
     private particles: Particle[];
     private animationId: number | null = null;
-    private baseR!: number;
-    private baseG!: number;
-    private baseB!: number;
+    private baseR: number = 255;
+    private baseG: number = 255;
+    private baseB: number = 255;
     private spawnInterval: number;
     private maxParticles: number;
     private spawnIntervalId: number | null = null;
@@ -44,7 +42,10 @@ export class OsuParticles {
     private speedMultiplier: number = 0.8;
 
     constructor(
-        canvasId: string, 
+        canvasId: string,
+        baseR: number = 255,
+        baseG: number = 255, 
+        baseB: number = 255,
         spawnInterval: number = 400, 
         sizeOffset: number = 25, 
         sizeMultipler: number = 40, 
@@ -62,31 +63,28 @@ export class OsuParticles {
             throw new Error('Could not get 2D context for canvas');
         }
 
+        this.baseR = baseR;
+        this.baseG = baseG;
+        this.baseB = baseB;
         this.sizeOffset = sizeOffset;
         this.sizeMultiplier = sizeMultipler;
         this.speedOffset = speedOffset;
         this.speedMultiplier = speedMultiplier;
         this.ctx = context;
         this.particles = [];
-        this.updateBaseColor();
         this.spawnInterval = spawnInterval;
         this.maxParticles = 900;
         // this.init();
     }
 
-    updateBaseColor(): void {
-        const baseColor = getComputedStyle(document.documentElement).getPropertyValue('--navbar-color');
-        const rgb = parseColor(baseColor);
+    updateBaseColor(r: number, g: number, b: number): void {
+        this.baseR = r;
+        this.baseG = g;
+        this.baseB = b;
         
-        if (rgb) {
-            this.baseR = rgb.r;
-            this.baseG = rgb.g;
-            this.baseB = rgb.b;
-            
-            this.particles.forEach(particle => {
-                particle.updateTargetColor(this.baseR, this.baseG, this.baseB);
-            });
-        }
+        this.particles.forEach(particle => {
+            particle.updateTargetColor(this.baseR, this.baseG, this.baseB);
+        });
     }
 
     init(starterparticles: number, extrudeX: number = this.canvas.width, extrudeY: number = this.canvas.height * 2): void {
@@ -209,7 +207,6 @@ export class OsuParticles {
             cancelAnimationFrame(this.animationId);
         }
         window.removeEventListener('resize', () => this.resizeCanvas());
-        document.removeEventListener('page:changed', () => this.updateBaseColor());
         if (this.spawnIntervalId !== null) {
             clearInterval(this.spawnIntervalId);
         }

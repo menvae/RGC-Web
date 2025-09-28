@@ -129,3 +129,25 @@ export function formatTime(milliseconds: number): string {
     }
 }
 
+export function getPageColor(href: string): number[] {
+    let rgb = [255, 255, 255];
+
+    switch (href) {
+        case "/":
+            rgb[0] = 212;
+            rgb[1] = 123;
+            rgb[2] = 175;
+            break;
+        case "/map":
+            rgb[0] = 26;
+            rgb[1] = 122;
+            rgb[2] = 140;
+            break;
+        case "/changelog":
+            rgb[0] = 197;
+            rgb[1] = 163;
+            rgb[2] = 59;
+            break;
+    }
+    return rgb;
+}

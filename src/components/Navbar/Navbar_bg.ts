@@ -1,4 +1,5 @@
 import { OsuParticles } from "../../OsuParticles";
+import { getPageColor, parseColor } from "../../helpers";
 
 let particleSystem: OsuParticles | null = null;
 let nav: HTMLElement | null = null;
@@ -14,15 +15,14 @@ export function initNavbarBg() {
         return;
     }
 
-    updateNavColor();
+    let baseColor = getPageColor("/");
+    updateNavColor(baseColor[0], baseColor[1], baseColor[2]);
 
     const canvas = document.getElementById('navbar_bg') as HTMLCanvasElement;
     if (canvas) {
-        particleSystem = new OsuParticles('navbar_bg');
+        particleSystem = new OsuParticles('navbar_bg', baseColor[0], baseColor[1], baseColor[2]);
         particleSystem.init(70);
     }
-
-    startUpdateLoop();
 }
 
 export function destroyNavbarBg() {
@@ -35,33 +35,30 @@ export function destroyNavbarBg() {
     particleSystem = null;
 }
 
-function updateNavColor() {
+function updateNavColor(r: number, g: number, b: number) {
     if (nav) {
-        const newColor = getComputedStyle(document.documentElement).getPropertyValue('--navbar-color');
-        nav.style.backgroundColor = newColor;
+        nav.style.backgroundColor = `rgba(${r}, ${g}, ${b})`;
     }
 }
 
-function startUpdateLoop() {
-    updateInterval = setInterval(() => {
-        try {
-            particleSystem?.updateBaseColor();
-            updateNavColor();
-        } catch (error) {
-            console.error('Failed to update nav color:', error);
-        }
-    }, 500);
+function updateParticleColor(r: number, g: number, b: number) {
+    if (particleSystem) {
+        particleSystem.updateBaseColor(r, g, b);
+    }
 }
 
-export function updateNavbarColors() {
-    updateNavColor();
-    particleSystem?.updateBaseColor();
+export function updateNavbarColors(r: number, g: number, b: number) {
+    updateNavColor(r, g, b);
+    updateParticleColor(r, g, b);
 }
 
 if (typeof window !== 'undefined') {
-    document.addEventListener('sveltekit:navigated', () => {
+    document.addEventListener('page:changed', (e: any) => {
+        let href = e.detail.href;
+        let rgb = getPageColor(href);
+
         nav = document.getElementById('main-nav');
         logoThing = document.getElementById('logo-thing');
-        updateNavbarColors();
+        updateNavbarColors(rgb[0], rgb[1], rgb[2]);
     });
 }
