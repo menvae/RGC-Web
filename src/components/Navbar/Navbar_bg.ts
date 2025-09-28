@@ -1,5 +1,5 @@
 import { OsuParticles } from "../../OsuParticles";
-import { getPageColor, parseColor } from "../../helpers";
+import { getPageColor } from "../../helpers";
 
 let particleSystem: OsuParticles | null = null;
 let nav: HTMLElement | null = null;
